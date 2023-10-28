@@ -42,17 +42,21 @@
           <h1 class="text-4xl font-bold border border-red-200 mt-4"></h1>
         </div>
       </div>
-        <div class="bg-white rounded-lg shadow-lg p-6 mt-4">
-            <img src="../assets/architecture-building-city-2047397.png" class="w-1/2 mx-auto my-auto h-auto mb-4 rounded-lg" />
+        <div class="bg-white rounded-lg  shadow-lg p-6 mt-4">
+          <div class="flex ml-80 shadow-xl mr-80 h-80">
+           <img class="transform transition duration-700 hover:scale-125 h-72 ml-24 mt-2"
+                src="../assets/architecture-building-city-2047397.png" alt="Image 1" />
+            <div class="ml-12 mt-6 text-left">
             <h2 class="text-2xl font-semibold mb-2">restaurant.name </h2>
-            <p class="text-gray-600 text-sm mb-2"> restaurant.description </p>
+            <p class="text-gray-600 text-sm mb-2 mt-2 mr-2"> L’espace Client LWS Panel vous permet de gérer votre nom de domaine, vos e-mails, vos services en quelques clics.Nos équipes techniques et commerciales sont à votre disposition 7j/7, n’hésitez pas à nous contacter ! </p>
             <p class="text-gray-600 text-sm mb-4">restaurant.address </p>
             <button 
-                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full">
+                class="bg-green-600 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full">
                 Réserver
             </button>
-
-            <h3 class="text-xl font-semibold mt-4">Nos repas</h3>
+            </div>
+             </div>
+            <h3 class="text-xl font-semibold mt-9">Nos repas</h3>
             <div class="flex mt-4">
           <div
             class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4">

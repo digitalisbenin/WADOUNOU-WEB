@@ -43,90 +43,35 @@
           <h1 class="text-4xl font-bold border border-red-200 mt-4"></h1>
         </div>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-8">
+ <div class="flex mt-4 flex-wrap">
+    <div v-for="(restaurant, index) in restaurants" :key="index" class="w-1/3 p-4">
         <div class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl">
 
           <div class="overflow-hidden rounded-2xl flex flex-grow">
             <img class="transform transition duration-700 hover:scale-125 h-72 w-full"
-              src="../assets/architecture-building-city-2047397.png" alt={title} />
+              :src="restaurant.image_url" alt={title} />
           </div>
 
           <div class="flex mt-6 space-x-3 ">
 
             <div class="flex flex-col space-y-3">
-              <h1 class="text-2xl text-gray-800 poppins"> Boca Del Rio, Grand Popo</h1>
-              <p class="text-sm text-gray-500 poppins">Vous sortez à Bénin, Afrique : lisez sur Tripadvisor 2 436 avis sur
-                212 restaurants à Bénin, recherchez par prix, quartier, etc.</p>
+              <h1 class="text-2xl text-gray-800 poppins"> {{restaurant.name}}</h1>
+              <p class="text-sm text-gray-500 poppins">{{restaurant.description}}</p>
               <router-link class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300" active-class="text-green-600" to="/restaurantdetail">Plus
                 Info</router-link>
             </div>
           </div>
         </div>
-        <div class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl">
-
-          <div class="overflow-hidden rounded-2xl flex flex-grow">
-            <img class="transform transition duration-700 hover:scale-125 h-72 w-full"
-              src="../assets/architecture-building-city-2047397.png" alt={title} />
-          </div>
-
-          <div class="flex mt-6 space-x-3 ">
-
-            <div class="flex flex-col space-y-3">
-              <h1 class="text-2xl text-gray-800 poppins"> Boca Del Rio, Grand Popo</h1>
-              <p class="text-sm text-gray-500 poppins">Vous sortez à Bénin, Afrique : lisez sur Tripadvisor 2 436 avis sur
-                212 restaurants à Bénin, recherchez par prix, quartier, etc.</p>
-                <router-link class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300" active-class="text-green-600" to="/restaurantdetail">Plus
-                Info</router-link>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl">
-
-          <div class="overflow-hidden rounded-2xl flex flex-grow">
-            <img class="transform transition duration-700 hover:scale-125 h-72 w-full" src="../assets/people-2576336_960_720.jpg"
-              alt={title} />
-          </div>
-
-          <div class="flex mt-6 space-x-3 ">
-
-            <div class="flex flex-col space-y-3">
-              <h1 class="text-2xl text-gray-800 poppins"> Wasabi Sushi Bar, Cotonou</h1>
-              <p class="text-sm text-gray-500 poppins">Nous y avons été avec mon mari et quelle belle surprise !! Les
-                produits sont super frais et vraiment très bons </p>
-                <router-link class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300" active-class="text-green-600" to="/restaurantdetail">Plus
-                Info</router-link>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl">
-
-          <div class="overflow-hidden rounded-2xl flex flex-grow">
-            <img class="transform transition duration-700 hover:scale-125 h-72 w-full"
-              src="../assets/adult-blur-blurred-background-687824.png" alt={title} />
-          </div>
-
-          <div class="flex mt-6 space-x-3 ">
-
-            <div class="flex flex-col space-y-3">
-              <h1 class="text-2xl text-gray-800 poppins"> Bon goût à Calavi IITA</h1>
-              <p class="text-sm text-gray-500 poppins">L’igname pilée est une spécialité du nord du Bénin qui est devenue
-                une référence de la gastronomie béninoise. Pas besoin d’attendre chaque année la fête de l’igname à
-                Savalou pour en déguster. </p>
-                <router-link class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300" active-class="text-green-600" to="/restaurantdetail">Plus
-                Info</router-link>
-            </div>
-          </div>
-        </div>
-
-      </div>
+    </div>
+</div>
+    
     </div>
 
   </div>
 </template>
   
 <script>
-
+import axios from "axios";
 export default {
   name: 'App',
   data() {
@@ -151,16 +96,33 @@ export default {
         { src: require('@/assets/photo-1512621776951-a57141f2eefd.png'), name: 'Déjeuner Chinois' },
       ],
       currentImage: 0,
+      restaurants: [],
     };
   },
   mounted() {
     this.startSlider();
+    this.restaurant();
   },
   methods: {
     startSlider() {
       setInterval(() => {
         this.currentImage = (this.currentImage + 1) % this.images.length;
       }, 5000); // Défilement toutes les 5 secondes
+    },
+    async restaurant() {
+      try {
+        const response = await axios.get("/api/restaurants");
+        if (response.data) {
+          this.restaurants = response.data.data;
+          console.log(this.restaurants);
+          this.filteredRestaurants = this.restaurants.filter(
+            (restaurant) => restaurant.user.id === this.user
+          );
+          console.log(this.filteredRestaurants);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
     },
   },
 };

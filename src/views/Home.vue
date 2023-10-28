@@ -50,22 +50,21 @@
         </transition>
       </div>
     </div>
-    <div class="relative overflow-hidden mb-6">
-      <div class="flex transition-transform duration-500 ease-in-out -ml-64">
+   
+   <div class="relative overflow-hidden  h-96 stop-scroll">
+      <div class="flex transition-transform duration-500 ease-in-out -ml-64 mt-4 hover:scale-105 slider-item">
         <!-- Première diapositive -->
         <div class="flex-shrink-0 w-1/4 ml-32">
           <div
-            class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl slider-item">
-            <div class="overflow-hidden rounded-2xl flex flex-grow">
+            class="flex bg-white transform transition  duration-700 hover:scale-105 p-6 rounded-2xl shadow-xl ">
+            <div class="overflow-hidden rounded-2xl flex flex-grow w-2/3">
               <img class="transform transition duration-700 hover:scale-125 h-72 w-full"
                 src="../assets/architecture-building-city-2047397.png" alt="Image 1" />
             </div>
-            <div class="flex mt-6 space-x-3">
+            <div class="flex mt-6 ml-4 space-x-3 w-1/3">
               <div class="flex flex-col space-y-3">
                 <h1 class="text-2xl text-gray-800 poppins">Boca Del Rio, Grand Popo</h1>
-                <p class="text-sm text-gray-500 poppins">Vous sortez à Bénin, Afrique : lisez sur Tripadvisor 2 436 avis
-                  sur
-                  212 restaurants à Bénin, recherchez par prix, quartier, etc.</p>
+                <p class="text-sm text-gray-500 poppins">Vous sortez à Bénin, </p>
                 <router-link
                   class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
                   active-class="text-green-600" to="/restaurantdetail">Plus Info</router-link>
@@ -77,20 +76,18 @@
         <!-- Deuxième diapositive -->
         <div class="flex-shrink-0 w-1/4 ml-32">
           <div
-            class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl slider-item">
-            <div class="overflow-hidden rounded-2xl flex flex-grow">
+            class="flex bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl shadow-xl ">
+            <div class="overflow-hidden rounded-2xl flex flex-grow  w-2/3">
               <img class="transform transition duration-700 hover:scale-125 h-72 w-full"
                 src="../assets/adult-blur-blurred-background-687824.png" alt={title} />
             </div>
 
-            <div class="flex mt-6 space-x-3 ">
-
+            <div class="flex mt-6 ml-4 space-x-3  w-1/3">
               <div class="flex flex-col space-y-3">
                 <h1 class="text-2xl text-gray-800 poppins"> Bon goût à Calavi IITA</h1>
                 <p class="text-sm text-gray-500 poppins">L’igname pilée est une spécialité du nord du Bénin qui est
                   devenue
-                  une référence de la gastronomie béninoise. Pas besoin d’attendre chaque année la fête de l’igname à
-                  Savalou pour en déguster. </p>
+                   </p>
                 <router-link
                   class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
                   active-class="text-green-600" to="/restaurantdetail">Plus
@@ -103,19 +100,17 @@
         <!-- Troisième diapositive -->
         <div class="flex-shrink-0 w-1/4 ml-32">
           <div
-            class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl slider-item">
-            <div class="overflow-hidden rounded-2xl flex flex-grow">
+            class="flex bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl shadow-xl ">
+            <div class="overflow-hidden rounded-2xl flex flex-grow w-2/3">
               <img class="transform transition duration-700 hover:scale-125 h-72 w-full"
                 src="../assets/architecture-building-city-2047397.png" alt={title} />
             </div>
 
-            <div class="flex mt-6 space-x-3 ">
+            <div class="flex mt-6 ml-4 space-x-3 w-1/3">
 
               <div class="flex flex-col space-y-3">
                 <h1 class="text-2xl text-gray-800 poppins"> Boca Del Rio, Grand Popo</h1>
-                <p class="text-sm text-gray-500 poppins">Vous sortez à Bénin, Afrique : lisez sur Tripadvisor 2 436 avis
-                  sur
-                  212 restaurants à Bénin, recherchez par prix, quartier, etc.</p>
+                <p class="text-sm text-gray-500 poppins">Vous sortez à Bénin,</p>
                 <router-link
                   class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
                   active-class="text-green-600" to="/restaurantdetail">Plus
@@ -128,18 +123,17 @@
         <!-- Quatrième diapositive -->
         <div class="flex-shrink-0 w-1/4 ml-32">
           <div
-            class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl slider-item">
-            <div class="overflow-hidden rounded-2xl flex flex-grow">
+            class="flex bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl shadow-xl ">
+            <div class="overflow-hidden rounded-2xl flex flex-grow w-2/3">
               <img class="transform transition duration-700 hover:scale-125 h-72 w-full"
                 src="../assets/people-2576336_960_720.jpg" alt={title} />
             </div>
 
-            <div class="flex mt-6 space-x-3 ">
+            <div class="flex mt-6 ml-4 space-x-3 w-1/3">
 
               <div class="flex flex-col space-y-3">
                 <h1 class="text-2xl text-gray-800 poppins"> Wasabi Sushi Bar, Cotonou</h1>
-                <p class="text-sm text-gray-500 poppins">Nous y avons été avec mon mari et quelle belle surprise !! Les
-                  produits sont super frais et vraiment très bons </p>
+                <p class="text-sm text-gray-500 poppins">Nous y avons été avec mon mari  </p>
                 <router-link
                   class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
                   active-class="text-green-600" to="/restaurantdetail">Plus
@@ -149,132 +143,27 @@
           </div>
         </div>
       </div>
+    
     </div>
 
+<h1 class="text-4xl font-bold ">Repas</h1>
+   <div class="flex mt-4 flex-wrap">
+    <div v-for="(repas, index) in repass" :key="index" class="w-1/4 p-4">
+        <div class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 rounded-lg relative ml-4">
+            <span class="bg-red-100 border border-red-500 rounded-full text-primary text-sm poppins px-4 py-1 inline-block mb-4">{{ repas.foodType }}</span>
 
-
-    <div>
-      <h1 class="text-4xl font-bold ">Repas</h1>
-      <div class="flex mt-4">
-        <div
-          class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4">
-          <span
-            className="bg-red-100 border border-red-500 rounded-full text-primary text-sm poppins px-4 py-1 inline-block mb-4 ">{foodType}</span>
-
-          <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner4.png"
-            alt="" />
-          <div class="flex flex-col items-center my-3 space-y-2">
-            <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-            <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-            <h2 class="text-gray-900 poppins text-2xl font-bold">1500 FCFA</h2>
-            <button
-              class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-            </button>
-          </div>
+            <img class="h-60 w-72 mx-auto transform transition duration-300 hover:scale-105" :src="repas.image_url" alt="" />
+            <div class="flex flex-col items-center my-3 space-y-2">
+                <h1 class="text-gray-900 poppins text-lg">{{ repas.name }}</h1>
+                <p class="text-gray-500 poppins text-sm text-center">{{ repas.description }}</p>
+                <h2 class="text-gray-900 poppins text-2xl font-bold">{{ repas.prix }}</h2>
+                <button @click="showModalRepas = true" class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-4 transform transition duration-300 hover:scale-105">Commander</button>
+            </div>
         </div>
-        <div
-          class="bg-white border border-gray-100 ml-4 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative w-1/4">
-
-          <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner5.png"
-            alt="" />
-          <div class="flex flex-col items-center my-3 space-y-2">
-            <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-            <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-            <h2 class="text-gray-900 poppins text-2xl font-bold">1800 FCFA</h2>
-            <button
-              class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-            </button>
-          </div>
-        </div>
-        <div
-          class="bg-white border border-gray-100 ml-4 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative w-1/4">
-
-          <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner6.png"
-            alt="" />
-          <div class="flex flex-col items-center my-3 space-y-2">
-            <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-            <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-            <h2 class="text-gray-900 poppins text-2xl font-bold">2500 FCFA</h2>
-            <button
-              class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-            </button>
-          </div>
-        </div>
-        <div
-          class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4 mr-4">
-          <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner1.png"
-            alt="" />
-          <div class="flex flex-col items-center my-3 space-y-2">
-            <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-            <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-            <h2 class="text-gray-900 poppins text-2xl font-bold">1500 FCFA</h2>
-            <button
-              class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-            </button>
-          </div>
-        </div>
-
-
-      </div>
-      <div class="flex mt-4">
-        <div
-          class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4">
-          <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/breakfast3.png"
-            alt="" />
-          <div class="flex flex-col items-center my-3 space-y-2">
-            <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-            <p class="text-gray-500 poppins text-sm text-center">{description}</p>
-            <h2 class="text-gray-900 poppins text-2xl font-bold">1700 FCFA</h2>
-            <button @click="openModal"
-              class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-            </button>
-          </div>
-        </div>
-        <div
-          class="bg-white border border-gray-100 ml-4 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative w-1/4">
-
-          <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/breakfast1.png"
-            alt="" />
-          <div class="flex flex-col items-center my-3 space-y-2">
-            <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-            <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-            <h2 class="text-gray-900 poppins text-2xl font-bold">1200 FCFA</h2>
-            <button
-              class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-            </button>
-          </div>
-        </div>
-        <div
-          class="bg-white border border-gray-100 ml-4 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative w-1/4 ">
-
-          <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/lunch1.png" alt="" />
-          <div class="flex flex-col items-center my-3 space-y-2">
-            <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-            <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-            <h2 class="text-gray-900 poppins text-2xl font-bold">2200 FCFA</h2>
-            <button
-              class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-            </button>
-          </div>
-        </div>
-        <div
-          class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4 mr-4">
-          <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner3.png"
-            alt="" />
-          <div class="flex flex-col items-center my-3 space-y-2">
-            <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-            <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-            <h2 class="text-gray-900 poppins text-2xl font-bold">1500 FCFA</h2>
-            <button
-              class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-            </button>
-          </div>
-        </div>
-
-
-      </div>
-
     </div>
+</div>
+
+
     <section class="pt-4 pb-12 bg-gray-800 mt-6 ">
       <div class="my-16 text-center">
         <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
@@ -332,15 +221,78 @@
   </div>
   <!-- Composant de modal -->
   <ModalComponent :isOpen="isModalOpen" @close="closeModal" />
+  <TheModal
+    width="w-full md:w-2/3 lg:w-1/2"
+    :is-open="showModalRepas"
+    @close-modal="showModalRepas = false"
+  >
+    <template #header> Ajouter un Repas</template>
+
+    <template #body>
+      <form action="#" method="POST" @submit.prevent="commande()">
+        <div>
+          <div class="mt-3 sm:mt-0 sm:col-span-2">
+            <div class="px-4 py-5 bg-white p-6">
+              <div class="grid grid-cols-8 gap-6">
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Nom " />
+                  <BaseInput
+                    id="nom"
+                    v-model="addform.name"
+                    class="mt-2"
+                  />
+                </div>
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Addrese" />
+                  <BaseInput
+                    id="prenom"
+                    v-model="addform.addrese"
+                    class="mt-2"
+                  />
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Télèphone" />
+                  <div class="relative mt-1">
+                    <BaseInput v-model="addform.contact" class="mt-2" />
+                  </div>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Description" />
+                  <BaseInput
+                    id="language"
+                    v-model="addform.description"
+                    class="mt-2"
+                  />
+                </div>
+               
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </template>
+    <template #footer>
+      <AddModalFooter @cancel="showModalRepas = false" @send="commande()" />
+    </template>
+  </TheModal>
 </template>
 
 <script>
+import axios from "axios";
 import ModalComponent from "../components/ModalComponent .vue";
+import TheModal from "../components/TheModal.vue";
+import BaseLabel from "../components/BaseLabel.vue";
+import BaseInput from "../components/BaseInput.vue";
+import AddModalFooter from "../components/AddModalFooter.vue";
 
 export default {
   name: 'App',
   components: {
     ModalComponent,
+    TheModal,
+    BaseLabel,
+    BaseInput,
+    AddModalFooter,
   },
   data() {
     return {
@@ -359,10 +311,23 @@ export default {
       ],
       currentImage: 0,
       isModalOpen: false,
+       addform: {
+        repas_id: "81289eb0-e3e5-45cd-b62c-e3f88a89e619",
+        name: "",
+        contact: "",
+        description: "",
+        addrese: "",
+        user_id: "",
+      },
+      showModalRepas: false,
+      repass:[],
+      restaurants: [],
     };
   },
   mounted() {
     this.startSlider();
+    this.getRepas();
+    this.restaurant();
 
   },
   methods: {
@@ -376,6 +341,45 @@ export default {
     },
     closeModal() {
       this.isModalOpen = false; // Fermer le modal
+    },
+     async commande() {
+      try {
+        const response = await axios.post("/api/commandes", this.addform);
+        if (response.status == 201) {
+          console.log(response);
+          this.showModalRepas =!this.showModalRepas;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+     async getRepas() {
+      try {
+        const response = await axios.get(
+          '/api/repas'
+        );
+       if (response.data) {
+        this.repass = response.data.data;
+        console.log(this.repass);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async restaurant() {
+      try {
+        const response = await axios.get("/api/restaurants");
+        if (response.data) {
+          this.restaurants = response.data.data;
+          console.log(this.restaurants);
+          this.filteredRestaurants = this.restaurants.filter(
+            (restaurant) => restaurant.user.id === this.user
+          );
+          console.log(this.filteredRestaurants);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
     },
   },
 };
@@ -406,8 +410,14 @@ export default {
 }
 
 .slider-item {
-  animation: slide 15s linear infinite;
+  animation: slide 25s linear infinite;
 }
+.stop-scroll, .stop-scroll *:hover {
+    transition: none !important;
+    animation: none !important;
+}
+
+
 
 @keyframes slide {
 

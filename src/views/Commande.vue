@@ -1,29 +1,46 @@
 <template>
   <div class="">
-    <div class="custom-background h-96">
-    </div>
+    <div class="custom-background h-96"></div>
     <div class="flex">
       <div class="w-1/3 mt-9">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
-            <img :src="images[currentImage].src" :alt="'Image ' + (currentImage + 1)" class="w-2/3 h-72 ml-16 object-cover">
-            <p class="text-center text-xl font-sans font-bold mt-2">{{ images[currentImage].name }}</p>
+            <img
+              :src="images[currentImage].src"
+              :alt="'Image ' + (currentImage + 1)"
+              class="w-2/3 h-72 ml-16 object-cover"
+            />
+            <p class="text-center text-xl font-sans font-bold mt-2">
+              {{ images[currentImage].name }}
+            </p>
           </div>
         </transition>
       </div>
       <div class="w-1/3 mt-9">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
-            <img :src="img[currentImage].src" :alt="'Image ' + (currentImage + 1)" class="w-2/3 h-72 ml-16 object-cover">
-            <p class="text-center text-xl font-sans font-bold mt-2">{{ img[currentImage].name }}</p>
+            <img
+              :src="img[currentImage].src"
+              :alt="'Image ' + (currentImage + 1)"
+              class="w-2/3 h-72 ml-16 object-cover"
+            />
+            <p class="text-center text-xl font-sans font-bold mt-2">
+              {{ img[currentImage].name }}
+            </p>
           </div>
         </transition>
       </div>
       <div class="w-1/3 mt-9">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
-            <img :src="image[currentImage].src" :alt="'Image ' + (currentImage + 1)" class="w-2/3 h-72 ml-16 object-cover">
-            <p class="text-center text-xl font-sans font-bold mt-2">{{ image[currentImage].name }}</p>
+            <img
+              :src="image[currentImage].src"
+              :alt="'Image ' + (currentImage + 1)"
+              class="w-2/3 h-72 ml-16 object-cover"
+            />
+            <p class="text-center text-xl font-sans font-bold mt-2">
+              {{ image[currentImage].name }}
+            </p>
           </div>
         </transition>
       </div>
@@ -48,15 +65,21 @@
       <!-- Learn More: https://formbold.com -->
 
       <div class="mx-auto w-full max-w-[550px]">
-        <form action="https://formbold.com/s/FORM_ID" method="POST">
+        <form action="#" method="POST" @submit.prevent="commande()">
           <div class="-mx-3 flex flex-wrap">
             <div class="w-full px-3 sm:w-1/2">
               <div class="mb-5">
                 <label for="fName" class="mb-3 block text-2xl font-bold">
                   Nom Complet
                 </label>
-                <input type="text" name="fName" id="fName" placeholder=" Nom Complet"
-                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                <input
+                  type="text"
+                  name="fName"
+                  id="fName"
+                  v-model="addform.name"
+                  placeholder=" Nom Complet"
+                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
               </div>
             </div>
             <div class="w-full px-3 sm:w-1/2">
@@ -64,8 +87,14 @@
                 <label for="lName" class="mb-3 block text-2xl font-bold">
                   Contact
                 </label>
-                <input type="text" name="lName" id="lName" placeholder="Contact"
-                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                <input
+                  type="text"
+                  name="lName"
+                  id="lName"
+                  v-model="addform.contact"
+                  placeholder="Contact"
+                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
               </div>
             </div>
           </div>
@@ -75,8 +104,14 @@
                 <label for="fName" class="mb-3 block text-2xl font-bold">
                   Adresse de livraison
                 </label>
-                <input type="text" name="fName" id="fName" placeholder=" Adresse"
-                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                <input
+                  type="text"
+                  name="fName"
+                  id="fName"
+                  v-model="addform.addrese"
+                  placeholder=" Adresse"
+                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
               </div>
             </div>
             <div class="w-full px-3 sm:w-1/2">
@@ -84,8 +119,14 @@
                 <label for="lName" class="mb-3 block text-2xl font-bold">
                   Decription
                 </label>
-                <input type="text" name="lName" id="lName" placeholder="Decription"
-                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                <input
+                  type="text"
+                  name="lName"
+                  id="lName"
+                  v-model="addform.description"
+                  placeholder="Decription"
+                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
               </div>
             </div>
           </div>
@@ -93,72 +134,108 @@
             <label for="restaurant" class="mb-3 block text-2xl font-bold">
               Choisissez un restaurant
             </label>
-            <select name="restaurant" id="restaurant"
-              class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
-              <option value="restaurant1">Restaurant 1</option>
-              <option value="restaurant2">Restaurant 2</option>
-              <option value="restaurant3">Restaurant 3</option>
+            <select
+              name="restaurant"
+              id="restaurant"
+              class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            >
+              <option
+                v-for="(restaurant, index) in restaurants"
+                :key="index"
+                :value="restaurant.id"
+              >
+                {{ restaurant.name }}
+              </option>
               <!-- Ajoutez plus d'options au besoin -->
             </select>
             <label for="restaurant" class="mb-3 block text-2xl font-bold mt-4">
               Choisissez un repas
             </label>
-            <select name="repas" id="repas"
-              class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
-              <option value="repas1">repas 1</option>
-              <option value="repas2">repas 2</option>
-              <option value="repas3">repas 3</option>
+            <select
+              name="restaurant"
+              id="restaurant"
+              v-model="addform.repas_id"
+              class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            >
+              <option
+                v-for="(repas, index) in repass"
+                :key="index"
+                :value="repas.id"
+              >
+                {{ repas.name }}
+              </option>
               <!-- Ajoutez plus d'options au besoin -->
             </select>
           </div>
 
-          
-
-
-
           <div>
             <button
-              class="hover:shadow-form rounded-md bg-green-600 py-3 px-8 text-center text-base font-semibold text-white outline-none">
+              class="hover:shadow-form rounded-md bg-green-600 py-3 px-8 text-center text-base font-semibold text-white outline-none"
+            >
               soumettre
             </button>
           </div>
         </form>
       </div>
     </div>
-
   </div>
 </template>
   
 <script>
+import axios from "axios";
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
       images: [
-        { src: require('@/assets/breakfast2.png'), name: 'Petit-déjeuner 1' },
-        { src: require('@/assets/breakfast4.png'), name: 'Petit-déjeuner Bénin' },
-        { src: require('@/assets/breakfast6.png'), name: 'Petit-déjeuner ' },
-        { src: require('@/assets/lunch3.png'), name: 'Déjeuner' },
+        { src: require("@/assets/breakfast2.png"), name: "Petit-déjeuner 1" },
+        {
+          src: require("@/assets/breakfast4.png"),
+          name: "Petit-déjeuner Bénin",
+        },
+        { src: require("@/assets/breakfast6.png"), name: "Petit-déjeuner " },
+        { src: require("@/assets/lunch3.png"), name: "Déjeuner" },
       ],
 
       image: [
-        { src: require('@/assets/lunch4.png'), name: 'Plat Africa' },
-        { src: require('@/assets/lunch5.png'), name: 'Plat Bénin' },
-        { src: require('@/assets/lunch6.png'), name: 'Déjeuner Sud' },
-        { src: require('@/assets/dinner2.png'), name: 'Déjeuner Nord' },
+        { src: require("@/assets/lunch4.png"), name: "Plat Africa" },
+        { src: require("@/assets/lunch5.png"), name: "Plat Bénin" },
+        { src: require("@/assets/lunch6.png"), name: "Déjeuner Sud" },
+        { src: require("@/assets/dinner2.png"), name: "Déjeuner Nord" },
       ],
 
       img: [
-        { src: require('@/assets/salmon-518032_960_720.jpg'), name: 'Pizza' },
-        { src: require('@/assets/food-712665_960_720.jpg'), name: 'Chawma' },
-        { src: require('@/assets/photo-1565299624946-b28f40a0ae38.png'), name: 'Burger' },
-        { src: require('@/assets/photo-1512621776951-a57141f2eefd.png'), name: 'Déjeuner Chinois' },
+        { src: require("@/assets/salmon-518032_960_720.jpg"), name: "Pizza" },
+        { src: require("@/assets/food-712665_960_720.jpg"), name: "Chawma" },
+        {
+          src: require("@/assets/photo-1565299624946-b28f40a0ae38.png"),
+          name: "Burger",
+        },
+        {
+          src: require("@/assets/photo-1512621776951-a57141f2eefd.png"),
+          name: "Déjeuner Chinois",
+        },
       ],
       currentImage: 0,
+      addform: {
+        repas_id: "",
+        name: "",
+        contact: "",
+        status: "En cours",
+        description: "",
+        addrese: "",
+        user_id: "",
+      },
+      restaurants: [],
+      repass: [],
+      user: "",
     };
   },
   mounted() {
     this.startSlider();
+    this.profile();
+    this.restaurant();
+    this.getRepas();
   },
   methods: {
     startSlider() {
@@ -166,14 +243,58 @@ export default {
         this.currentImage = (this.currentImage + 1) % this.images.length;
       }, 5000); // Défilement toutes les 5 secondes
     },
+    async profile() {
+      try {
+        const response = await axios.get("/api/profile");
+        if (response.data) {
+          this.user = response.data.id;
+          console.log(this.user);
+          this.filterRestaurantsByUser(this.user);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async getRepas() {
+      try {
+        const response = await axios.get("/api/repas");
+        if (response.data) {
+          this.repass = response.data.data;
+          console.log(this.repass);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async restaurant() {
+      try {
+        const response = await axios.get("/api/restaurants");
+        if (response.data) {
+          this.restaurants = response.data.data;
+          console.log(this.restaurants);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async commande() {
+      try {
+        const response = await axios.post("/api/commandes", this.addform);
+        if (response.status == 201) {
+          console.log(response);
+          this.$router.push("/");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
-
 </script>
   
 <style scoped>
 .custom-background {
-  background-image: url('~@/assets/IMG_CommandeLigne(1)_large.png');
+  background-image: url("~@/assets/IMG_CommandeLigne(1)_large.png");
   /* Remplacez 'votre-image.jpg' par le nom de votre image */
   background-size: cover;
   /* Ajustez la taille de l'image */

@@ -28,129 +28,27 @@
         </transition>
       </div>
     </div>
-      <div>
-        <h1 class="text-4xl font-bold ">Repas</h1>
-        <div class="flex mt-4">
-          <div
-            class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4">
-            <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner4.png"
-              alt="" />
+      <h1 class="text-4xl font-bold ">Repas</h1>
+   <div class="flex mt-4 flex-wrap">
+    <div v-for="(repas, index) in repass" :key="index" class="w-1/4 p-4">
+        <div class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 rounded-lg relative ml-4">
+            <span class="bg-red-100 border border-red-500 rounded-full text-primary text-sm poppins px-4 py-1 inline-block mb-4">{{ repas.foodType }}</span>
+
+            <img class="h-60 w-72 mx-auto transform transition duration-300 hover:scale-105" :src="repas.image_url" alt="" />
             <div class="flex flex-col items-center my-3 space-y-2">
-              <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-              <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-              <h2 class="text-gray-900 poppins text-2xl font-bold">1500 FCFA</h2>
-              <button
-                class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-              </button>
+                <h1 class="text-gray-900 poppins text-lg">{{ repas.name }}</h1>
+                <p class="text-gray-500 poppins text-sm text-center">{{ repas.description }}</p>
+                <h2 class="text-gray-900 poppins text-2xl font-bold">{{ repas.prix }}</h2>
+                <button @click="showModalRepas = true" class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-4 transform transition duration-300 hover:scale-105">Commander</button>
             </div>
-          </div>
-          <div
-            class="bg-white border border-gray-100 ml-4 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative w-1/4">
-  
-            <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner5.png"
-              alt="" />
-            <div class="flex flex-col items-center my-3 space-y-2">
-              <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-              <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-              <h2 class="text-gray-900 poppins text-2xl font-bold">1800 FCFA</h2>
-              <button
-                class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-              </button>
-            </div>
-          </div>
-          <div
-            class="bg-white border border-gray-100 ml-4 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative w-1/4">
-  
-            <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner6.png"
-              alt="" />
-            <div class="flex flex-col items-center my-3 space-y-2">
-              <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-              <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-              <h2 class="text-gray-900 poppins text-2xl font-bold">2500 FCFA</h2>
-              <button
-                class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-              </button>
-            </div>
-          </div>
-          <div
-            class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4 mr-4">
-            <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner1.png"
-              alt="" />
-            <div class="flex flex-col items-center my-3 space-y-2">
-              <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-              <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-              <h2 class="text-gray-900 poppins text-2xl font-bold">1500 FCFA</h2>
-              <button
-                class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-              </button>
-            </div>
-          </div>
-  
-  
         </div>
-        <div class="flex mt-4">
-          <div
-            class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4">
-            <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/breakfast3.png"
-              alt="" />
-            <div class="flex flex-col items-center my-3 space-y-2">
-              <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-              <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-              <h2 class="text-gray-900 poppins text-2xl font-bold">1700 FCFA</h2>
-              <button
-                class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-              </button>
-            </div>
-          </div>
-          <div
-            class="bg-white border border-gray-100 ml-4 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative w-1/4">
-  
-            <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/breakfast1.png"
-              alt="" />
-            <div class="flex flex-col items-center my-3 space-y-2">
-              <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-              <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-              <h2 class="text-gray-900 poppins text-2xl font-bold">1200 FCFA</h2>
-              <button
-                class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-              </button>
-            </div>
-          </div>
-          <div
-            class="bg-white border border-gray-100 ml-4 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative w-1/4 ">
-  
-            <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/lunch1.png" alt="" />
-            <div class="flex flex-col items-center my-3 space-y-2">
-              <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-              <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-              <h2 class="text-gray-900 poppins text-2xl font-bold">2200 FCFA</h2>
-              <button
-                class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-              </button>
-            </div>
-          </div>
-          <div
-            class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative ml-4 w-1/4 mr-4">
-            <img class="w-64 mx-auto transform transition duration-300 hover:scale-105" src="../assets/dinner3.png"
-              alt="" />
-            <div class="flex flex-col items-center my-3 space-y-2">
-              <h1 class="text-gray-900 poppins text-lg">{title}</h1>
-              <p class="text-gray-500 poppins text-sm text-center">{description.slice(0,50)}</p>
-              <h2 class="text-gray-900 poppins text-2xl font-bold">1500 FCFA</h2>
-              <button
-                class="bg-green-600 text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105">Commander
-              </button>
-            </div>
-          </div>
-  
-  
-        </div>
-  
-      </div>
+    </div>
+</div>
     </div>
   </template>
   
   <script>
+  import axios from "axios";
   export default {
     name: 'App',
     data() {
@@ -173,6 +71,7 @@
     },
     mounted() {
       this.startSlider();
+      this.getRepas();
     },
     methods: {
       startSlider() {
@@ -180,6 +79,19 @@
           this.currentImage = (this.currentImage + 1) % this.images.length;
         }, 5000); // Défilement toutes les 5 secondes
       },
+        async getRepas() {
+      try {
+        const response = await axios.get(
+          '/api/repas'
+        );
+       if (response.data) {
+        this.repass = response.data.data;
+        console.log(this.repass);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
     },
   };
   
