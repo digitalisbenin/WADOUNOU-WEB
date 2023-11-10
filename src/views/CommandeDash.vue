@@ -31,19 +31,19 @@
         />
       </div>
       <div class="flex">
-                <BaseLabel class="mr-9 mt-4 text-xl" value="Filtrer" />
-                
-                  <select
-                    id="compagnie"
-                    v-model="addform.status"
-                    class="rounded border border-gray-300 mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2 px-9"
-                    placeholder="status"
-                  >
-                    <option value="En cours">En cours</option>
-                    <option value="suspended">Suspend</option>
-                    <option value="Terminer">Terminer</option>
-                  </select>
-                </div>
+        <BaseLabel class="mr-9 mt-4 text-xl" value="Filtrer" />
+
+        <select
+          id="compagnie"
+          v-model="addform.status"
+          class="rounded border border-gray-300 mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2 px-9"
+          placeholder="status"
+        >
+          <option value="En cours">En cours</option>
+          <option value="suspended">Suspend</option>
+          <option value="Terminer">Terminer</option>
+        </select>
+      </div>
     </div>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead
@@ -61,7 +61,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="(commande, index) in commandes"
+          v-for="(commande, index) in filteredCommandes"
           :key="index"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
@@ -78,7 +78,7 @@
             {{ commande.description }}
           </th>
           <td class="px-6 py-4">
-            {{ commande.addrese }}
+            {{ commande.adresse }}
           </td>
           <td class="px-6 py-4">
             {{ commande.contact }}
@@ -126,6 +126,28 @@
           </td>
 
           <td class="flex items-center px-6 py-4 space-x-3">
+            <button
+              class="text-green-500 hover:bg-gray-100 hover:rounded-lg font-medium"
+               @click="CommandeModal(commande.id)"
+            >
+            <span class="flex items-center p-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 "
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                />
+              </svg>
+              Affecter
+            </span>
+            </button>
             <button
               class="text-red-500 hover:bg-gray-100 hover:rounded-lg font-medium"
               @click="deleteCommandeModal()"
@@ -221,6 +243,51 @@
       />
     </template>
   </TheModal>
+   <TheModal
+    width="w-full md:w-2/3 lg:w-1/2"
+    :is-open="showModalCommandeAffecte"
+    @close-modal="showModalCommandeAffecte = false"
+  >
+    <template #header> Affecter la Commande</template>
+
+    <template #body>
+      <form action="#" method="POST" @submit.prevent="Livraisons()">
+        <div>
+          <div class="mt-3 sm:mt-0 sm:col-span-2">
+            <div class="px-4 py-5 bg-white p-6">
+              <div class="grid grid-cols-8 gap-6">
+                
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Choisissez un livreur" />
+                  <select
+                    name="category"
+                    id="category"
+                    v-model="sendform.livreur_id"
+                    class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                  >
+                    <option
+                      v-for="(Livreur, index) in Livreurs"
+                      :key="index"
+                      :value="Livreur.id"
+                    >
+                      {{ Livreur.name }}
+                    </option>
+                    <!-- Ajoutez plus d'options au besoin -->
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </template>
+    <template #footer>
+      <AddModalFooter
+        @cancel="showModalCommandeAffecte = false"
+        @send="Livraisons()"
+      />
+    </template>
+  </TheModal>
 </template>
 <script>
 import axios from "axios";
@@ -257,6 +324,11 @@ export default {
         custom_fields_attributes: "",
         custom_fields: "",
       },
+      sendform:{
+        livreur_id:"",
+        commande_id:"",
+        status:"En cours",
+      },
       alert: {
         type: "",
         message: "",
@@ -264,17 +336,29 @@ export default {
       processing: false,
       showDeleteCommandeModal: false,
       showModalCommandeUpdate: false,
+      showModalCommandeAffecte:false,
       commandes: [],
+      Livreurs:[],
+      filteredCommandes: [],
+      filteredRestaurants: [],
       user: "",
+      restaurant_id: "",
+      commandeID:"",
     };
   },
   created() {
     this.profile();
     this.getCommande();
+    this.restaurant();
+    this.getLivreur();
   },
   methods: {
     deleteCommandeModal() {
       this.showDeleteCommandeModal = !this.showDeleteCommandeModal;
+    },
+    CommandeModal(id){
+      this.showModalCommandeAffecte= !this.showModalCommandeAffecte;
+      this.commandeID = id;
     },
     async profile() {
       try {
@@ -282,7 +366,36 @@ export default {
         if (response.data) {
           this.user = response.data.id;
           console.log(this.user);
-          this.filterRestaurantsByUser(this.user);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    /** * async restaurant() {
+      try {
+        const response = await axios.get("/api/restaurants");
+        if (response.data) {
+          console.log(response.data.data[0].id);
+          this.restaurant_id = response.data.data;
+          console.log(this.restaurant_id);
+          
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },**/
+    async restaurant() {
+      try {
+        const response = await axios.get("/api/restaurants");
+        if (response.data) {
+          this.restaurants = response.data.data;
+          console.log(this.restaurants);
+          this.filteredRestaurants = this.restaurants.filter(
+            (restaurant) => restaurant.user.id === this.user
+          );
+          console.log(this.filteredRestaurants);
+          this.restaurant_id = this.filteredRestaurants[0].id;
+          console.log(this.restaurant_id);
         }
       } catch (error) {
         console.log(error.data);
@@ -294,6 +407,39 @@ export default {
         if (response.data) {
           this.commandes = response.data.data;
           console.log(this.commandes);
+          console.log(this.restaurant_id);
+          this.filteredCommandes = this.commandes.filter((commande) => {
+            return (
+              commande.restaurant &&
+              commande.restaurant.id === this.restaurant_id
+            );
+          });
+          console.log(this.filteredCommandes);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+     async getLivreur() {
+      try {
+        const response = await axios.get("/api/livreurs");
+        if (response.data) {
+          this.Livreurs = response.data.data;
+          console.log(this.Livreurs);
+          
+          
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+     async Livraisons() {
+      try {
+        this.sendform.commande_id = this.commandeID;
+        const response = await axios.post("/api/livraisons", this.sendform);
+        if (response.status ==201) {
+          console.log(response);
+          this.$router.push("/");
         }
       } catch (error) {
         console.log(error.data);

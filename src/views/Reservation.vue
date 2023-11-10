@@ -68,59 +68,30 @@
         <h1 class="text-4xl font-bold border border-red-200 mt-4"></h1>
       </div>
     </div>
-    <div class="flex items-center justify-center p-36">
+     <label for="restaurant" class="mb-3 block text-2xl font-bold mt-12">
+              Recherchez un repas
+            </label>
+    <div
+      class="rounded-full p-1 mt-4 box-border border border-orange-500 mx-auto my-auto bg-white overflow-hidden ring-red-300 focus:ring-4 w-2/4 flex items-center py-1"
+    >
+      <input
+        type="text"
+        class="rounded-full px-4 focus:outline-none w-full"
+        placeholder="Recherche ......."
+      />
+      <button
+        class="text-sm bg-green-600 py-2 px-6 rounded-full text-white poppins ring-red-300 focus:ring-4 transition duration-300 hover:scale-105 transform"
+      >
+        Search
+      </button>
+    </div>
+    <div class="flex items-center justify-center p-12">
       <!-- Author: FormBold Team -->
       <!-- Learn More: https://formbold.com -->
 
       <div class="mx-auto w-full max-w-[550px]">
         <form action="#" method="POST" @submit.prevent="reservation()">
-          <div class="-mx-3 flex flex-wrap">
-            <div class="w-full px-3 sm:w-1/2">
-              <div class="mb-5">
-                <label for="fName" class="mb-3 block text-2xl font-bold">
-                  Nom Complet
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="fName"
-                  v-model="addform.name"
-                  placeholder=" Nom Complet"
-                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                />
-              </div>
-            </div>
-            <div class="w-full px-3 sm:w-1/2">
-              <div class="mb-5">
-                <label for="lName" class="mb-3 block text-2xl font-bold">
-                  Contact
-                </label>
-                <input
-                  type="text"
-                  name="lName"
-                  id="lName"
-                  v-model="addform.contact"
-                  placeholder="65962333"
-                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="mb-5">
-            <label for="guest" class="mb-3 block text-2xl font-bold">
-              Nombre de place
-            </label>
-            <input
-              type="number"
-              name="guest"
-              id="guest"
-              v-model="addform.place"
-              placeholder="5"
-              min="0"
-              class="w-full appearance-none rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-            />
-          </div>
-          <div class="mb-5">
+          <div class="mb-5 mx-24">
             <label for="restaurant" class="mb-3 block text-2xl font-bold">
               Choisissez un restaurant
             </label>
@@ -140,15 +111,76 @@
               <!-- Ajoutez plus d'options au besoin -->
             </select>
           </div>
-
-          <div class="-mx-3 flex flex-wrap">
-            <div class="w-full px-3 sm:w-1/2">
-              <div class="mb-5">
-                <label for="date" class="mb-3 block text-2xl font-bold">
-                  Date
+          <div class="mb-5 mx-24">
+            <label for="guest" class="mb-3 block text-2xl font-bold">
+              Nombre de place
+            </label>
+            <input
+              type="number"
+              name="guest"
+              id="guest"
+              v-model="addform.place"
+              placeholder="5"
+              min="0"
+              class="w-full appearance-none rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            />
+          </div>
+          <div class=" mx-24 ">
+              <div class="mb-5 ">
+                <label for="lName" class="mb-3 block text-2xl font-bold">
+                  Info Complementaire
                 </label>
                 <input
-                  type="date"
+                  type="text"
+                  name="lName"
+                  id="lName"
+                  v-model="addform.description"
+                  placeholder="Decription"
+                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
+              </div>
+            </div>
+          <div class="mx-24 flex flex-wrap">
+            <div class="w-full sm:w-1/2">
+              <div class="mb-5">
+                <label for="fName" class="mb-3 block text-2xl font-bold">
+                  Nom Complet
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="fName"
+                  v-model="addform.name"
+                  placeholder=" Nom Complet"
+                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
+              </div>
+            </div>
+            <div class="w-full  sm:w-1/2">
+              <div class="mb-5 ml-2">
+                <label for="lName" class="mb-3 block text-2xl font-bold">
+                  Contact
+                </label>
+                <input
+                  type="text"
+                  name="lName"
+                  id="lName"
+                  v-model="addform.contact"
+                  placeholder="65962333"
+                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
+              </div>
+            </div>
+          </div>
+          
+          
+            <div class="mx-24 ">
+              <div class="mb-5">
+                <label for="date" class="mb-3 block text-2xl font-bold">
+                  Date et Heure
+                </label>
+                <input
+                  type="datetime-local"
                   name="date"
                   id="date"
                   v-model="addform.date"
@@ -156,20 +188,8 @@
                 />
               </div>
             </div>
-            <div class="w-full px-3 sm:w-1/2">
-              <div class="mb-5">
-                <label for="time" class="mb-3 block text-2xl font-bold">
-                  Heure
-                </label>
-                <input
-                  type="time"
-                  name="time"
-                  id="time"
-                  class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                />
-              </div>
-            </div>
-          </div>
+            
+          
 
           <div>
             <button

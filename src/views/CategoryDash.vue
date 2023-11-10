@@ -33,7 +33,7 @@
       <div>
         <button
           class="inline-flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          @click="showModalRepas = true"
+          @click="showModalCategory = true"
         >
           Ajouter
         </button>
@@ -45,15 +45,14 @@
       >
         <tr>
           <th scope="col" class="px-6 py-3">Nom</th>
-          <th scope="col" class="px-6 py-3">Description</th>
-          <th scope="col" class="px-6 py-3">Prix</th>
-          <th scope="col" class="px-6 py-3">Category</th>
+          <th scope="col" class="px-6 py-3">Decription</th>
+
           <th scope="col" class="px-6 py-3">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr
-        v-for="(repas, index) in repass"
+         v-for="(category, index) in categorys"
                       :key="index"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
@@ -61,17 +60,15 @@
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{repas.name}}
+            {{category.name}}
           </th>
-          <td class="px-6 py-4"> {{repas.description}}</td>
-          <td class="px-6 py-4"> {{repas.prix}}FCFA</td>
-          <td class="px-6 py-4"> {{repas.categoris.name}}</td>
+          <td class="px-6 py-4">{{category.description}}</td>
 
           <td class="flex items-center px-6 py-4 space-x-3">
-             <a
+            <a
               class="text-blue-600 font-medium hover:bg-gray-100 hover:rounded-lg"
               href="#"
-              @click="showModalRepasUpdate = true"
+              @click="showModalReservationUpdate = true"
             >
               <span class="flex items-center p-2">
                 <svg
@@ -92,7 +89,7 @@
             </a>
             <button
               class="text-red-500 hover:bg-gray-100 hover:rounded-lg font-medium"
-              @click="deleteRepasModal()"
+              @click="deleteReservationModal()"
             >
               <span class="flex items-center p-2">
                 <svg
@@ -117,28 +114,28 @@
   </div>
   <DeleteModalFooter
     width="w-full md:w-2/3 lg:w-1/3"
-    :is-open="showDeleteRepasModal"
-    @cancel="showDeleteRepasModal = !showDeleteRepasModal"
-    @delete="deleteRepas()"
+    :is-open="showDeleteReservationModal"
+    @cancel="showDeleteReservationModal = !showDeleteReservationModal"
+    @delete="deleteRestaurant()"
   >
     <template #header>Supprimer</template>
-    <template #body> Vous voulez suppprimer ce repas </template>
+    <template #body> Vous voulez suppprimer cet reservation </template>
   </DeleteModalFooter>
   <TheModal
     width="w-full md:w-2/3 lg:w-1/2"
-    :is-open="showModalRepas"
-    @close-modal="showModalRepas = false"
+    :is-open="showModalCategory"
+    @close-modal="showModalCategory = false"
   >
-    <template #header> Ajouter un Repas</template>
+    <template #header> Ajouter une Category</template>
 
     <template #body>
-      <form action="#" method="POST" @submit.prevent="addRepas()">
+      <form action="#" method="POST" @submit.prevent="category()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
               <div class="grid grid-cols-8 gap-6">
                 <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Nom " />
+                  <BaseLabel value="Nom" />
                   <BaseInput
                     id="nom"
                     v-model="addform.name"
@@ -146,51 +143,14 @@
                   />
                 </div>
                 <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Prix" />
-                  <div class="flex">
-                  <BaseInput
-                    id="prenom"
-                    v-model="addform.prix"
-                    class="mt-2"
-                  />
-                  <span class="mt-4 ml-1">FCFA</span>
-                  </div>
-                </div>
-                <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Description" />
                   <BaseInput
-                    id="language"
+                    id="prenom"
                     v-model="addform.description"
                     class="mt-2"
                   />
                 </div>
-                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Choisissez une Category" />
-                  <select
-                    name="category"
-                    id="category"
-                    v-model="addform.categoris_id"
-                    class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
-                  >
-                    <option
-                      v-for="(category, index) in categorys"
-                      :key="index"
-                      :value="category.id"
-                    >
-                      {{ category.name }}
-                    </option>
-                    <!-- Ajoutez plus d'options au besoin -->
-                  </select>
-                </div>
-                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Image" />
-                  <BaseInput
-                    id="image"
-                    type="file"
-                    @change="onFileChange"
-                    class="mt-2"
-                  />
-                </div>
+               
               </div>
             </div>
           </div>
@@ -198,15 +158,18 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter @cancel="showModalRepas = false" @send="addRepas()" />
+      <AddModalFooter
+        @cancel="showModalCategory = false"
+        @send="category()"
+      />
     </template>
   </TheModal>
   <TheModal
     width="w-full md:w-2/3 lg:w-1/2"
-    :is-open="showModalRepasUpdate"
-    @close-modal="showModalRepasUpdate = false"
+    :is-open="showModalReservationUpdate"
+    @close-modal="showModalReservationUpdate = false"
   >
-    <template #header> Mettre à jour le Repas</template>
+    <template #header> Mettre à jour la Reservation</template>
 
     <template #body>
       <form action="#" method="POST" @submit.prevent="addContact()">
@@ -215,7 +178,7 @@
             <div class="px-4 py-5 bg-white p-6">
               <div class="grid grid-cols-8 gap-6">
                 <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Nom " />
+                  <BaseLabel value="nom" />
                   <BaseInput
                     id="nom"
                     v-model="addform.first_name"
@@ -223,7 +186,7 @@
                   />
                 </div>
                 <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Prix" />
+                  <BaseLabel value="prenom" />
                   <BaseInput
                     id="prenom"
                     v-model="addform.last_name"
@@ -231,24 +194,20 @@
                   />
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Type" />
+                  <BaseLabel value="phone" />
                   <div class="relative mt-1">
-                    <BaseInput v-model="phone" class="mt-2" />
+                    <BaseInput
+                      v-model="phone"
+                      type="phone"
+                      placeholder="62333333"
+                      class="pl-9 mt-2"
+                    />
                   </div>
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Description" />
+                  <BaseLabel value="langue" />
                   <BaseInput
                     id="language"
-                    v-model="addform.language"
-                    class="mt-2"
-                  />
-                </div>
-                <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Image" />
-                  <BaseInput
-                    id="language"
-                    type="file"
                     v-model="addform.language"
                     class="mt-2"
                   />
@@ -260,21 +219,23 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter @cancel="showModalRepasUpdate = false" @send="addContact()" />
+      <AddModalFooter
+        @cancel="showModalReservationUpdate = false"
+        @send="addContact()"
+      />
     </template>
   </TheModal>
 </template>
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
 import DeleteModalFooter from "../components/DeleteModalFooter.vue";
 import TheModal from "../components/TheModal.vue";
 import BaseLabel from "../components/BaseLabel.vue";
 import BaseInput from "../components/BaseInput.vue";
 import AddModalFooter from "../components/AddModalFooter.vue";
 export default {
-  name: "RepasDash",
+  name: "ReservationDash",
   components: {
     DeleteModalFooter,
     TheModal,
@@ -284,12 +245,14 @@ export default {
   },
   data() {
     return {
+      form: {
+        email: "",
+        password: "",
+        // local: null,
+      },
       addform: {
-        categoris_id: "",
         name: "",
         description: "",
-        prix: "",
-        image_url: "",
         
       },
       alert: {
@@ -297,76 +260,19 @@ export default {
         message: "",
       },
       processing: false,
-      showDeleteRepasModal: false,
-      showModalRepas: false,
-      showModalRepasUpdate: false,
-      repass:[],
-      user:"",
-      filteredRestaurants: [],
+      showDeleteReservationModal: false,
+      showModalCategory: false,
+      showModalReservationUpdate: false,
+      user: "",
       categorys: [],
     };
   },
-  computed: {
-    ...mapState({
-      repas: (state) => state.repas.repas,
-    }),
-  },
   created() {
-    this.fetchRepas();
-    this.profile();
-    this.getRepas();
-    this.restaurant();
     this.getCategorys();
   },
   methods: {
-      async profile() {
-      try {
-        const response = await axios.get(
-          '/api/profile'
-        );
-       if (response.data) {
-         this.user = response.data.id
-        console.log(this.user);
-        this.filterRestaurantsByUser(this.user);
-        }
-      } catch (error) {
-        console.log(error.data);
-      }
-    },
-      async restaurant() {
-      try {
-        const response = await axios.get("/api/restaurants");
-        if (response.data) {
-          this.restaurants = response.data.data;
-          console.log(this.restaurants);
-          this.filteredRestaurants = this.restaurants.filter(
-            (restaurant) => restaurant.user.id === this.user
-          );
-          console.log(this.filteredRestaurants);
-        }
-      } catch (error) {
-        console.log(error.data);
-      }
-    },
-
-     async getRepas() {
-      try {
-        const response = await axios.get(
-          '/api/repas'
-        );
-       if (response.data) {
-        this.repass = response.data.data;
-        console.log(this.repass);
-        }
-      } catch (error) {
-        console.log(error.data);
-      }
-    },
-    async fetchRepas() {
-      this.processing = true;
-      this.$store.dispatch("repas/fetchRepas").then(() => {
-        this.processing = false;
-      });
+    deleteReservationModal() {
+      this.showDeleteReservationModal = !this.showDeleteReservationModal;
     },
      async getCategorys() {
       try {
@@ -381,48 +287,18 @@ export default {
         console.log(error.data);
       }
     },
-    deleteRepasModal() {
-      this.showDeleteRepasModal = !this.showDeleteRepasModal;
-    },
-     addRepas() {
-      const formData = new FormData();
-
-      formData.append("file", this.image);
-
-      axios
-        .post("api/medias", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          if (response.status == 201) {
-            this.addform.image_url = response.data.data.media_url;
-            console.log(this.addform.image_url);
-            this.sendRepas();
-            
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    async sendRepas() {
+    async category() {
       try {
-        this.addform.user_id = this.user;
-        const response = await axios.post("/api/repas", this.addform );
-        if (response.status ==201) {
+        const response = await axios.post("/api/categorys", this.addform);
+        if (response.status == 201) {
           console.log(response);
           this.$router.push("/");
         }
       } catch (error) {
-        console.log(error.data);
+        console.log(error);
       }
     },
-    onFileChange(e) {
-      const file = e.target.files[0];
-      this.image = file;
-    },
+    
   },
 };
 </script>

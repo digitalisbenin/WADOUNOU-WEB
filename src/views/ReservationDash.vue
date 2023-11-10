@@ -50,7 +50,7 @@
         <tbody>
          
                 <tr
-                v-for="(reservation, index) in reservations"
+                v-for="(reservation, index) in filteredReservations"
                       :key="index"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
@@ -312,13 +312,17 @@ export default {
       showDeleteReservationModal: false,
        showModalReservation: false,
        showModalReservationUpdate:false,
-      user:"",
+       filteredRestaurants: [],
+      user: "",
+      restaurant_id: "",
       reservations:[],
+      filteredReservations:[],
     };
   },
   created() {
      this. profile();
      this.getReservation();
+     this.restaurant();
    },
   methods: {
    deleteReservationModal() {
@@ -333,7 +337,24 @@ export default {
        if (response.data) {
          this.user = response.data.id
         console.log(this.user);
-        this.filterRestaurantsByUser(this.user);
+        
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+       async restaurant() {
+      try {
+        const response = await axios.get("/api/restaurants");
+        if (response.data) {
+          this.restaurants = response.data.data;
+          console.log(this.restaurants);
+          this.filteredRestaurants = this.restaurants.filter(
+            (restaurant) => restaurant.user.id === this.user
+          );
+          console.log(this.filteredRestaurants);
+          this.restaurant_id = this.filteredRestaurants[0].id;
+            console.log(this.restaurant_id);
         }
       } catch (error) {
         console.log(error.data);
@@ -347,6 +368,10 @@ export default {
        if (response.data) {
         this.reservations = response.data.data;
         console.log(this.reservations);
+        this.filteredReservations = this.reservations.filter(
+            (reservation) => reservation.restaurant.id === this.restaurant_id
+          );
+          console.log(this.filteredReservations);
         }
       } catch (error) {
         console.log(error.data);

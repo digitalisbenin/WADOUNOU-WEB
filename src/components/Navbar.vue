@@ -8,7 +8,7 @@
         
         <!-- Barre de recherche -->
         <div class="rounded-full p-1 box-border border border-orange-500 bg-white overflow-hidden ring-red-300 focus:ring-4 w-96 flex items-center py-1">
-                    <input type="text" class=" rounded-full px-4 focus:outline-none w-full " placeholder="Search here ......." />
+                    <input type="text" class=" rounded-full px-4 focus:outline-none w-full " placeholder="Recherche ......." />
                     <button class="text-sm bg-green-600 py-2 px-6 rounded-full text-white poppins ring-red-300 focus:ring-4 transition duration-300 hover:scale-105 transform">Search</button>
          </div>
         <!-- Menu -->

@@ -48,6 +48,8 @@
           <th scope="col" class="px-6 py-3">Description</th>
           <th scope="col" class="px-6 py-3">Adresse</th>
           <th scope="col" class="px-6 py-3">Phone</th>
+          <th scope="col" class="px-6 py-3">Position</th>
+          <th scope="col" class="px-6 py-3">Status</th>
           <th scope="col" class="px-6 py-3">Action</th>
         </tr>
       </thead>
@@ -64,8 +66,46 @@
             {{ livreur.name }}
           </th>
           <td class="px-6 py-4">{{ livreur.description }}</td>
-          <td class="px-6 py-4">{{ livreur.addrese }}</td>
+          <td class="px-6 py-4">{{ livreur.adresse }}</td>
           <td class="px-6 py-4">{{ livreur.phone }}</td>
+          <td class="px-6 py-4">{{ livreur.position }}</td>
+           <td class="px-6 py-4">
+            <span
+              v-if="livreur.status === 'en cours livrason'"
+              class="text-uppercase inline-flex items-center rounded-full px-2.5 py-1 text-sm bg-blue-600 text-gray-900"
+            >
+              <span class="relative mr-1.5 flex h-2.5 w-2.5">
+                <span
+                  class="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-400"
+                >
+                </span>
+              </span>
+              {{ livreur.status }}
+            </span>
+            <span
+              v-if="livreur.status === 'occuper'"
+              class="text-uppercase inline-flex items-center rounded-full px-2.5 py-1 text-sm bg-red-600 text-gray-900"
+            >
+              <span class="relative mr-1.5 flex h-2.5 w-2.5"
+                ><span
+                  class="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-400"
+                ></span
+              ></span>
+              {{ livreur.status }}</span
+            >
+            <span
+              v-if="livreur.status === 'disponible'"
+              class="text-uppercase inline-flex items-center rounded-full px-2.5 py-1 text-sm bg-green-600 text-gray-900"
+            >
+              <span class="relative mr-1.5 flex h-2.5 w-2.5">
+                <span
+                  class="relative inline-flex h-2.5 w-2.5 rounded-full bg-yellow-400"
+                >
+                </span>
+              </span>
+              {{ livreur.status }}
+            </span>
+          </td>
           <td class="flex items-center px-6 py-4 space-x-3">
             <a
               class="text-blue-600 font-medium hover:bg-gray-100 hover:rounded-lg"
@@ -144,11 +184,11 @@
                   <BaseLabel value="Adresse" />
                   <BaseInput
                     id="prenom"
-                    v-model="addform.addrese"
+                    v-model="addform.adresse"
                     class="mt-2"
                   />
                 </div>
-                <div class="col-span-8 sm:col-span-8">
+                <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Télephone" />
                   <div class="relative mt-1">
                     <BaseInput
@@ -158,11 +198,39 @@
                     />
                   </div>
                 </div>
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Position" />
+                  <div class="relative mt-1">
+                    <BaseInput
+                      v-model="addform.position"
+                      placeholder="itta"
+                      class="mt-2"
+                    />
+                  </div>
+                </div>
                 <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Description" />
                   <BaseInput
                     id="language"
                     v-model="addform.description"
+                    class="mt-2"
+                  />
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Image" />
+                  <BaseInput
+                    id="image"
+                    type="file"
+                    @change="onFileChange"
+                    class="mt-2"
+                  />
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="document(facultatif)" />
+                  <BaseInput
+                    id="pdf"
+                    type="file"
+                    @change="onFileChanges"
                     class="mt-2"
                   />
                 </div>
@@ -205,7 +273,17 @@
                     class="mt-2"
                   />
                 </div>
-                <div class="col-span-8 sm:col-span-8">
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Télephone" />
+                  <div class="relative mt-1">
+                    <BaseInput
+                      v-model="phone"
+                      placeholder="62333333"
+                      class="mt-2"
+                    />
+                  </div>
+                </div>
+                <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Télephone" />
                   <div class="relative mt-1">
                     <BaseInput
@@ -258,11 +336,14 @@ export default {
     return {
       addform: {
         name: "",
-        addrese: "",
+        adresse: "",
         phone: "",
         description: "",
         user_id: "",
-        restaurant_id: "",
+        position: "",
+        document_url: "",
+        status: "disponible",
+        image_url: "",
       },
       alert: {
         type: "",
@@ -314,23 +395,41 @@ export default {
     },
     addLivreur() {
       const formData = new FormData();
-      formData.append("name", this.addform.name);
-      formData.append("addrese", this.addform.addrese);
-      formData.append("user_id", this.user);
-      formData.append("phone", this.addform.phone);
-      formData.append("description", this.addform.description);
+
+      formData.append("file", this.image);
 
       axios
-        .post("api/livreurs", formData)
+        .post("api/medias", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then((response) => {
           if (response.status == 201) {
-            console.log(response);
-            this.$router.push("/");
+            this.addform.image_url = response.data.data.media_url;
+            console.log(this.addform.image_url);
+            this.sendLivreur();
           }
         })
         .catch((error) => {
           console.error(error);
         });
+    },
+    async sendLivreur() {
+      try {
+        this.addform.user_id = this.user;
+        const response = await axios.post("/api/livreurs", this.addform);
+        if (response.status == 201) {
+          console.log(response);
+          this.$router.push("/");
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.image = file;
     },
   },
 };

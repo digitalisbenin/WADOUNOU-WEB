@@ -12,7 +12,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 Pusher;
 
-ApiService.init("http://apiv1.sevenservicesplus.com/");
+ApiService.init("https://apiv6.sevenservicesplus.com/");
 if (TokenService.getToken()) {
   ApiService.setHeader();
 }

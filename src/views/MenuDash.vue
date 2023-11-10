@@ -47,28 +47,28 @@
           <th scope="col" class="px-6 py-3">Nom</th>
           <th scope="col" class="px-6 py-3">Description</th>
           <th scope="col" class="px-6 py-3">Prix</th>
-          <th scope="col" class="px-6 py-3">Category</th>
+          <th scope="col" class="px-6 py-3">Nom Repas</th>
           <th scope="col" class="px-6 py-3">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr
-        v-for="(repas, index) in repass"
-                      :key="index"
+          v-for="(menu, index) in filteredMenus"
+          :key="index"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
           <th
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{repas.name}}
+            {{ menu.name }}
           </th>
-          <td class="px-6 py-4"> {{repas.description}}</td>
-          <td class="px-6 py-4"> {{repas.prix}}FCFA</td>
-          <td class="px-6 py-4"> {{repas.categoris.name}}</td>
+          <td class="px-6 py-4">{{ menu.description }}</td>
+          <td class="px-6 py-4">{{ menu.prix }}</td>
+          <td class="px-6 py-4">{{ menu.repas.name }}</td>
 
           <td class="flex items-center px-6 py-4 space-x-3">
-             <a
+            <a
               class="text-blue-600 font-medium hover:bg-gray-100 hover:rounded-lg"
               href="#"
               @click="showModalRepasUpdate = true"
@@ -129,32 +129,21 @@
     :is-open="showModalRepas"
     @close-modal="showModalRepas = false"
   >
-    <template #header> Ajouter un Repas</template>
+    <template #header> Ajouter un Menu</template>
 
     <template #body>
-      <form action="#" method="POST" @submit.prevent="addRepas()">
+      <form action="#" method="POST" @submit.prevent="addMenu()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
               <div class="grid grid-cols-8 gap-6">
                 <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Nom " />
-                  <BaseInput
-                    id="nom"
-                    v-model="addform.name"
-                    class="mt-2"
-                  />
+                  <BaseInput id="nom" v-model="addform.name" class="mt-2" />
                 </div>
                 <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Prix" />
-                  <div class="flex">
-                  <BaseInput
-                    id="prenom"
-                    v-model="addform.prix"
-                    class="mt-2"
-                  />
-                  <span class="mt-4 ml-1">FCFA</span>
-                  </div>
+                  <BaseInput id="prenom" v-model="addform.prix" class="mt-2" />
                 </div>
                 <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Description" />
@@ -164,32 +153,41 @@
                     class="mt-2"
                   />
                 </div>
-                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Choisissez une Category" />
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Choisissez un repas" />
                   <select
                     name="category"
                     id="category"
-                    v-model="addform.categoris_id"
+                    v-model="addform.repas_id"
                     class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
                   >
                     <option
-                      v-for="(category, index) in categorys"
+                      v-for="(repas, index) in repass"
                       :key="index"
-                      :value="category.id"
+                      :value="repas.id"
                     >
-                      {{ category.name }}
+                      {{ repas.name }}
                     </option>
                     <!-- Ajoutez plus d'options au besoin -->
                   </select>
                 </div>
-                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Image" />
-                  <BaseInput
-                    id="image"
-                    type="file"
-                    @change="onFileChange"
-                    class="mt-2"
-                  />
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Choisissez un restaurant" />
+                  <select
+                    name="category"
+                    id="category"
+                    v-model="addform.restaurant_id"
+                    class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                  >
+                    <option
+                      v-for="(restaurant, index) in filteredRestaurants"
+                      :key="index"
+                      :value="restaurant.id"
+                    >
+                      {{ restaurant.name }}
+                    </option>
+                    <!-- Ajoutez plus d'options au besoin -->
+                  </select>
                 </div>
               </div>
             </div>
@@ -198,7 +196,7 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter @cancel="showModalRepas = false" @send="addRepas()" />
+      <AddModalFooter @cancel="showModalRepas = false" @send="addMenu()" />
     </template>
   </TheModal>
   <TheModal
@@ -260,7 +258,10 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter @cancel="showModalRepasUpdate = false" @send="addContact()" />
+      <AddModalFooter
+        @cancel="showModalRepasUpdate = false"
+        @send="addContact()"
+      />
     </template>
   </TheModal>
 </template>
@@ -290,7 +291,6 @@ export default {
         description: "",
         prix: "",
         image_url: "",
-        
       },
       alert: {
         type: "",
@@ -300,10 +300,13 @@ export default {
       showDeleteRepasModal: false,
       showModalRepas: false,
       showModalRepasUpdate: false,
-      repass:[],
-      user:"",
+      repass: [],
+      user: "",
+      restaurant_id:"",
       filteredRestaurants: [],
-      categorys: [],
+      filteredMenus: [],
+      restaurants: [],
+      menus: [],
     };
   },
   computed: {
@@ -312,22 +315,18 @@ export default {
     }),
   },
   created() {
-    this.fetchRepas();
     this.profile();
     this.getRepas();
     this.restaurant();
-    this.getCategorys();
+    this.getMenus();
   },
   methods: {
-      async profile() {
+    async profile() {
       try {
-        const response = await axios.get(
-          '/api/profile'
-        );
-       if (response.data) {
-         this.user = response.data.id
-        console.log(this.user);
-        this.filterRestaurantsByUser(this.user);
+        const response = await axios.get("/api/profile");
+        if (response.data) {
+          this.user = response.data.id;
+          console.log(this.user);
         }
       } catch (error) {
         console.log(error.data);
@@ -343,40 +342,38 @@ export default {
             (restaurant) => restaurant.user.id === this.user
           );
           console.log(this.filteredRestaurants);
+          this.restaurant_id = this.filteredRestaurants[0].id;
+            console.log(this.restaurant_id);
         }
       } catch (error) {
         console.log(error.data);
       }
     },
 
-     async getRepas() {
+    async getRepas() {
       try {
-        const response = await axios.get(
-          '/api/repas'
-        );
-       if (response.data) {
-        this.repass = response.data.data;
-        console.log(this.repass);
+        const response = await axios.get("/api/repas");
+        if (response.data) {
+          this.repass = response.data.data;
+          console.log(this.repass);
         }
       } catch (error) {
         console.log(error.data);
       }
     },
-    async fetchRepas() {
-      this.processing = true;
-      this.$store.dispatch("repas/fetchRepas").then(() => {
-        this.processing = false;
-      });
-    },
-     async getCategorys() {
+    async getMenus() {
       try {
-        const response = await axios.get(
-          '/api/categorys'
-        );
-       if (response.data) {
-        this.categorys = response.data.data;
-        console.log(this.categorys);
+        const response = await axios.get("/api/menus");
+        if (response.data) {
+            console.log(response.data.data);
+          this.menus = response.data.data;
+          console.log(this.menus);
+           this.filteredMenus = this.menus.filter(
+            (menu) => menu.restaurant.id === this.restaurant_id
+          );
+          console.log(this.filteredMenus);
         }
+        
       } catch (error) {
         console.log(error.data);
       }
@@ -384,44 +381,17 @@ export default {
     deleteRepasModal() {
       this.showDeleteRepasModal = !this.showDeleteRepasModal;
     },
-     addRepas() {
-      const formData = new FormData();
 
-      formData.append("file", this.image);
-
-      axios
-        .post("api/medias", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          if (response.status == 201) {
-            this.addform.image_url = response.data.data.media_url;
-            console.log(this.addform.image_url);
-            this.sendRepas();
-            
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    async sendRepas() {
+    async addMenu() {
       try {
-        this.addform.user_id = this.user;
-        const response = await axios.post("/api/repas", this.addform );
-        if (response.status ==201) {
+        const response = await axios.post("/api/menus", this.addform);
+        if (response.status == 201) {
           console.log(response);
           this.$router.push("/");
         }
       } catch (error) {
         console.log(error.data);
       }
-    },
-    onFileChange(e) {
-      const file = e.target.files[0];
-      this.image = file;
     },
   },
 };

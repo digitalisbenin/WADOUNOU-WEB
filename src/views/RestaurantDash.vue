@@ -48,7 +48,8 @@
           <th scope="col" class="px-6 py-3">Decription</th>
           <th scope="col" class="px-6 py-3">Addrese</th>
           <th scope="col" class="px-6 py-3">Phone</th>
-
+          <th scope="col" class="px-6 py-3">Capacité</th>
+          <th scope="col" class="px-6 py-3">Specialité</th>
           <th scope="col" class="px-6 py-3">Action</th>
         </tr>
       </thead>
@@ -65,9 +66,10 @@
             {{ restaurant.name }}
           </th>
           <td class="px-6 py-4">{{ restaurant.description }}</td>
-          <td class="px-6 py-4">{{ restaurant.addrese }}</td>
+          <td class="px-6 py-4">{{ restaurant.adresse }}</td>
           <td class="px-6 py-4">{{ restaurant.phone }}</td>
-
+          <td class="px-6 py-4">{{ restaurant.capacite }}</td>
+          <td class="px-6 py-4">{{ restaurant.specilite }}</td>
           <td class="flex items-center px-6 py-4 space-x-3">
             <a
               class="text-blue-600 font-medium hover:bg-gray-100 hover:rounded-lg"
@@ -151,7 +153,31 @@
                   <BaseLabel value="Adresse" />
                   <BaseInput
                     id="prenom"
-                    v-model="addform.addrese"
+                    v-model="addform.adresse"
+                    class="mt-2"
+                  />
+                </div>
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Specialité" />
+                  <BaseInput id="nom" v-model="addform.specilite" class="mt-2" />
+                </div>
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Capacité" />
+                  <BaseInput
+                    id="prenom"
+                    v-model="addform.capacite"
+                    class="mt-2"
+                  />
+                </div>
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Heure d'ouverture" />
+                  <BaseInput type="time" id="time" v-model="addform.heure_douverture" class="mt-2" />
+                </div>
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Heure de fermeture" />
+                  <BaseInput
+                    type="time" id="time"
+                    v-model="addform.heure_fermeture"
                     class="mt-2"
                   />
                 </div>
@@ -180,6 +206,15 @@
                     id="image"
                     type="file"
                     @change="onFileChange"
+                    class="mt-2"
+                  />
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="document(facultatif)" />
+                  <BaseInput
+                    id="pdf"
+                    type="file"
+                    @change="onFileChanges"
                     class="mt-2"
                   />
                 </div>
@@ -293,12 +328,18 @@ export default {
       },
       addform: {
         name: "",
-        addrese: "",
+        adresse: "",
         phone: "",
         description: "",
         abonnement_id: "",
         user_id: "",
         image_url: "",
+        specilite:"",
+        heure_douverture:"",
+        heure_fermeture:"",
+        document_url:"",
+        capacite:"",
+
       },
       alert: {
         type: "",

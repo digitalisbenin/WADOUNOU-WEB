@@ -11,8 +11,10 @@ import Commande from './views/Commande.vue';
 import RestaurantDetail from './views/RestaurantDetail.vue';
 import RestaurantDash from './views/RestaurantDash.vue';
 import CommandeDash from './views/CommandeDash.vue';
+import CategoryDash from './views/CategoryDash.vue';
 import LivreurDash from './views/LivreurDash.vue';
 import RepasDash from './views/RepasDash.vue';
+import MenuDash from './views/MenuDash.vue';
 import LivraisonDash from './views/LivraisonDash.vue';
 import ReservationDash from './views/ReservationDash.vue';
 import Profils from './views/Profils.vue';
@@ -52,6 +54,11 @@ const routes = [
     meta: { layout: DashLayout, public: false },
   },
   {
+    path: "/categorys",
+    component: CategoryDash,
+    meta: { layout: DashLayout, public: false },
+  },
+  {
     path: "/livreurDash",
     component: LivreurDash,
     meta: { layout: DashLayout, public: false },
@@ -61,6 +68,11 @@ const routes = [
     component: RepasDash,
     meta: { layout: DashLayout, public: false },
   },
+  {
+  path: "/menudash",
+  component: MenuDash,
+  meta: { layout: DashLayout, public: false },
+},
   {
     path: "/livraisonDash",
     component: LivraisonDash,

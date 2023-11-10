@@ -62,10 +62,10 @@
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{ livraison.name }}
+            {{ livraison.commande.name }}
           </th>
-          <td class="px-6 py-4">{{ livraison.addrese }}</td>
-          <td class="px-6 py-4">{{ livraison.phone }}</td>
+          <td class="px-6 py-4">{{ livraison.commande.adresse }}</td>
+          <td class="px-6 py-4">{{ livraison.commande.contact }}</td>
           <td class="px-6 py-4">{{ livraison.livreur.name }}</td>
           
             <td class="px-6 py-4">
