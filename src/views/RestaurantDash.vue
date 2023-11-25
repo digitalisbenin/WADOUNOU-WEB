@@ -1,122 +1,320 @@
 <template>
-  <div
-    class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white p-4 mt-9"
-  >
+  <div v-show="showAlert">
+    <AlertComponent :content="alert.message" type-alert="error" />
+  </div>
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white p-4">
     <div class="flex items-center justify-between pb-4">
       <label for="table-search" class="sr-only">Rechercher</label>
       <div class="relative">
         <div
           class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-        >
-          <svg
-            class="w-5 h-5 text-gray-500 dark:text-gray-400"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-        </div>
-        <input
-          type="text"
-          id="table-search"
-          wire:model="search"
-          class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Rechercher ..."
-        />
+        ></div>
       </div>
       <div>
         <button
-          class="inline-flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          @click="showModalRestaurant = true"
+          class="text-white hover:bg-gray-500 rounded-lg font-medium bg-green-700 mr-4"
+          @click="MenuModal(restaurant.id)"
         >
-          Ajouter
+          <span class="flex items-center p-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+              />
+            </svg>
+            Ajouter un menu
+          </span>
         </button>
       </div>
     </div>
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-      <thead
-        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-      >
-        <tr>
-          <th scope="col" class="px-6 py-3">Nom</th>
-          <th scope="col" class="px-6 py-3">Decription</th>
-          <th scope="col" class="px-6 py-3">Addrese</th>
-          <th scope="col" class="px-6 py-3">Phone</th>
-          <th scope="col" class="px-6 py-3">Capacité</th>
-          <th scope="col" class="px-6 py-3">Specialité</th>
-          <th scope="col" class="px-6 py-3">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(restaurant, index) in filteredRestaurants"
-          :key="index"
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+    <div v-if="filteredRestaurant.length === 0">
+      <form action="#" method="POST" @submit.prevent="addRestaurant()">
+        <div>
+          <div class="px-4 py-5 bg-white p-6">
+            <div class="flex">
+              <div class="w-2/3 mr-9">
+                <BaseLabel value="Nom du restaurant" class="text-left font-bold" />
+                <BaseInput id="nom" v-model="addform.name" class="mt-1" />
+
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Adresse" class="text-left mt-2 font-bold" />
+                  <BaseInput
+                    id="prenom"
+                    v-model="addform.adresse"
+                    class="mt-1"
+                  />
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel
+                    value="Téléphone"
+                    class="text-left mt-2 font-bold"
+                  />
+                  <div class="relative mt-1">
+                    <BaseInput
+                      v-model="addform.phone"
+                      placeholder="62333333"
+                      class="mt-1"
+                    />
+                  </div>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel
+                    value="Capacité"
+                    class="text-left mt-2 font-bold"
+                  />
+                  <div class="relative mt-1">
+                    <BaseInput
+                      v-model="addform.capacite"
+                      placeholder="62333333"
+                      class="mt-1"
+                    />
+                  </div>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel
+                    value="Spécialité"
+                    class="text-left mt-2 font-bold"
+                  />
+                  <div class="relative mt-1">
+                    <BaseInput
+                      v-model="addform.specilite"
+                      placeholder="62333333"
+                      class="mt-1"
+                    />
+                  </div>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel
+                    value="Photo de profil"
+                    class="text-left mt-2 font-bold"
+                  />
+                  <BaseInput
+                    id="image"
+                    type="file"
+                    @change="onFileChange"
+                    class="mt-1"
+                  />
+                </div>
+              </div>
+              <div class="w-1/3 mt-4">
+                <img
+                  src="../assets/profil_defaut-1-450x450.png"
+                  alt="Logo"
+                  class="w-full h-full"
+                />
+              </div>
+            </div>
+            <div class="flex">
+              <div class="w-1/2 mr-2">
+                <BaseLabel
+                  value="Heure d'ouverture"
+                  class="text-left mt-2 font-bold"
+                />
+                <BaseInput
+                  type="time"
+                  id="time"
+                  v-model="addform.heure_douverture"
+                  class="mt-2"
+                />
+              </div>
+              <div class="w-1/2 ml-2">
+                <BaseLabel
+                  value="Heure de fermeture"
+                  class="text-left mt-2 font-bold"
+                />
+                <BaseInput
+                  type="time"
+                  id="time"
+                  v-model="addform.heure_fermeture"
+                  class="mt-2"
+                />
+              </div>
+            </div>
+            <div class="col-span-8 sm:col-span-8">
+              <BaseLabel
+                value="Pièce d'identité"
+                class="text-left mt-2 font-bold"
+              />
+              <BaseInput
+                id="image"
+                type="file"
+                @change="onFileChanges"
+                class="mt-1"
+              />
+            </div>
+            <div class="col-span-8 sm:col-span-8">
+              <BaseLabel
+                value="Description "
+                class="text-left mt-2 font-bold"
+              />
+              <div class="mt-1">
+                <textarea
+                  class="block w-full p-2 border border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                  v-model="addform.description"
+                  autocomplete="current-password"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Button
+          type="submit"
+          class="bg-green-600 text-white px-8 py-2 focus:outline-none rounded-lg mt-2 transform transition duration-300"
         >
-          <th
-            scope="row"
-            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          Mettre à jour
+        </Button>
+      </form>
+    </div>
+    <div v-else>
+      <form action="#" method="POST" @submit.prevent="UpdateRestaurant()">
+        <div>
+          <div
+            v-for="(livreur, index) in filteredRestaurant"
+            :key="index"
+            class="px-4 py-5 bg-white p-6"
           >
-            {{ restaurant.name }}
-          </th>
-          <td class="px-6 py-4">{{ restaurant.description }}</td>
-          <td class="px-6 py-4">{{ restaurant.adresse }}</td>
-          <td class="px-6 py-4">{{ restaurant.phone }}</td>
-          <td class="px-6 py-4">{{ restaurant.capacite }}</td>
-          <td class="px-6 py-4">{{ restaurant.specilite }}</td>
-          <td class="flex items-center px-6 py-4 space-x-3">
-            <a
-              class="text-blue-600 font-medium hover:bg-gray-100 hover:rounded-lg"
-              href="#"
-              @click="showModalRestaurantUpdate = true"
-            >
-              <span class="flex items-center p-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="w-6 h-6 pr-2"
-                >
-                  <path
-                    d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
+            <div class="flex">
+              <div class="w-2/3 mr-9">
+                <BaseLabel value="Nom du restaurant" class="text-left font-bold" />
+                <BaseInput id="nom" v-model="livreur.name" class="mt-1" />
+
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Adresse" class="text-left mt-2 font-bold" />
+                  <BaseInput
+                    id="prenom"
+                    v-model="livreur.adresse"
+                    class="mt-1"
                   />
-                  <path
-                    d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel
+                    value="Téléphone"
+                    class="text-left mt-2 font-bold"
                   />
-                </svg>
-                Modifier
-              </span>
-            </a>
-            <button
-              class="text-red-500 hover:bg-gray-100 hover:rounded-lg font-medium"
-              @click="deleteRestaurantModal(restaurant.id)"
-            >
-              <span class="flex items-center p-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="w-6 h-6 pr-2"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                    clip-rule="evenodd"
+                  <div class="relative mt-1">
+                    <BaseInput
+                      v-model="livreur.phone"
+                      placeholder="62333333"
+                      class="mt-1"
+                    />
+                  </div>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel
+                    value="Capacité"
+                    class="text-left mt-2 font-bold"
                   />
-                </svg>
-                Supprimer
-              </span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                  <div class="relative mt-1">
+                    <BaseInput
+                      v-model="livreur.capacite"
+                      placeholder="62333333"
+                      class="mt-1"
+                    />
+                  </div>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel
+                    value="Spécialité"
+                    class="text-left mt-2 font-bold"
+                  />
+                  <div class="relative mt-1">
+                    <BaseInput
+                      v-model="livreur.specilite"
+                      placeholder="62333333"
+                      class="mt-1"
+                    />
+                  </div>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel
+                    value="Photo de profil"
+                    class="text-left mt-2 font-bold"
+                  />
+                  <BaseInput
+                    id="image"
+                    type="file"
+                    @change="onFileChange"
+                    class="mt-1"
+                  />
+                </div>
+              </div>
+              <div class="w-1/3 mt-4">
+                <img class="w-full h-full" :src="livreur.image_url" alt="" />
+              </div>
+            </div>
+            <div class="flex">
+              <div class="w-1/2 mr-2">
+                <BaseLabel
+                  value="Heure d'ouverture"
+                  class="text-left mt-2 font-bold"
+                />
+                <BaseInput
+                  type="time"
+                  id="time"
+                  v-model="livreur.heure_douverture"
+                  class="mt-2"
+                />
+              </div>
+              <div class="w-1/2 ml-2">
+                <BaseLabel
+                  value="Heure de fermeture"
+                  class="text-left mt-2 font-bold"
+                />
+                <BaseInput
+                  type="time"
+                  id="time"
+                  v-model="livreur.heure_fermeture"
+                  class="mt-2"
+                />
+              </div>
+            </div>
+            <div class="col-span-8 sm:col-span-8">
+              <BaseLabel
+                value="Pièce d'identité"
+                class="text-left mt-2 font-bold"
+              />
+              <BaseInput
+                id="image"
+                type="file"
+                @change="onFileChanges"
+                class="mt-1"
+              />
+            </div>
+            <div class="col-span-8 sm:col-span-8">
+              <BaseLabel
+                value="Description "
+                class="text-left mt-2 font-bold"
+              />
+              <div class="mt-1">
+                <textarea
+                  class="block w-full p-2 border border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                  v-model="livreur.description"
+                  autocomplete="current-password"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Button
+          type="submit"
+          class="bg-green-600 text-white px-8 py-2 focus:outline-none rounded-lg mt-2 transform transition duration-300"
+        >
+          Mettre à jour
+        </Button>
+      </form>
+    </div>
   </div>
   <DeleteModalFooter
     width="w-full md:w-2/3 lg:w-1/3"
@@ -159,7 +357,11 @@
                 </div>
                 <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Specialité" />
-                  <BaseInput id="nom" v-model="addform.specilite" class="mt-2" />
+                  <BaseInput
+                    id="nom"
+                    v-model="addform.specilite"
+                    class="mt-2"
+                  />
                 </div>
                 <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Capacité" />
@@ -171,12 +373,18 @@
                 </div>
                 <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Heure d'ouverture" />
-                  <BaseInput type="time" id="time" v-model="addform.heure_douverture" class="mt-2" />
+                  <BaseInput
+                    type="time"
+                    id="time"
+                    v-model="addform.heure_douverture"
+                    class="mt-2"
+                  />
                 </div>
                 <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Heure de fermeture" />
                   <BaseInput
-                    type="time" id="time"
+                    type="time"
+                    id="time"
                     v-model="addform.heure_fermeture"
                     class="mt-2"
                   />
@@ -233,58 +441,127 @@
   </TheModal>
   <TheModal
     width="w-full md:w-2/3 lg:w-1/2"
-    :is-open="showModalRestaurantUpdate"
-    @close-modal="showModalRestaurantUpdate = false"
+    :is-open="showModalRepas"
+    @close-modal="showModalRepas = false"
   >
-    <template #header> Mettre à jour un Restaurant</template>
+    <template #header> Ajouter un Menu</template>
 
     <template #body>
-      <form action="#" method="POST" @submit.prevent="addContact()">
+      <form action="#" method="POST" @submit.prevent="addMenu()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
               <div class="grid grid-cols-8 gap-6">
                 <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Nom complet" />
-                  <BaseInput
-                    id="nom"
-                    v-model="addform.first_name"
-                    class="mt-2"
-                  />
+                  <BaseLabel value="Choisissez un repas" />
+                  <select
+                    name="category"
+                    id="category"
+                    v-model="addforms.repas_id"
+                    class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                  >
+                    <option
+                      v-for="(repas, index) in repass"
+                      :key="index"
+                      :value="repas.id"
+                    >
+                      {{ repas.name }}
+                    </option>
+                    <!-- Ajoutez plus d'options au besoin -->
+                  </select>
                 </div>
-                <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Adresse" />
-                  <BaseInput
-                    id="prenom"
-                    v-model="addform.last_name"
-                    class="mt-2"
-                  />
+                <div class="col-span-8 sm:col-span-4 mt-6">
+                  <button
+                    class="inline-flex text-white bg-blue-700 mt-1 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    @click="showModalRepasCreate = true"
+                  >
+                    Ajouter
+                  </button>
+                </div>
+
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Prix" />
+                  <BaseInput id="prenom" v-model="addforms.prix" class="mt-2" />
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Télephone" />
-                  <div class="relative mt-1">
+                  <BaseLabel value="Description" />
+                  <textarea
+                    class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                    v-model="addforms.description"
+                    autocomplete="current-password"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </template>
+    <template #footer>
+      <AddModalFooter @cancel="showModalRepas = false" @send="addMenu()" />
+    </template>
+  </TheModal>
+  <TheModal
+    width="w-full md:w-2/3 lg:w-1/2"
+    :is-open="showModalRepasCreate"
+    @close-modal="showModalRepasCreate = false"
+  >
+    <template #header> Ajouter un Repas</template>
+
+    <template #body>
+      <form action="#" method="POST" @submit.prevent="addRepas()">
+        <div>
+          <div class="mt-3 sm:mt-0 sm:col-span-2">
+            <div class="px-4 py-5 bg-white p-6">
+              <div class="grid grid-cols-8 gap-6">
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Nom " />
+                  <BaseInput id="nom" v-model="addsend.name" class="mt-2" />
+                </div>
+                <div class="col-span-8 sm:col-span-4">
+                  <BaseLabel value="Prix" />
+                  <div class="flex">
                     <BaseInput
-                      v-model="phone"
-                      type="phone"
-                      placeholder="62333333"
+                      id="prenom"
+                      v-model="addsend.prix"
                       class="mt-2"
                     />
+                    <span class="mt-4 ml-1">FCFA</span>
                   </div>
                 </div>
                 <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Description" />
                   <BaseInput
                     id="language"
-                    v-model="addform.language"
+                    v-model="addsend.description"
                     class="mt-2"
                   />
                 </div>
                 <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Choisissez une Category" />
+                  <select
+                    name="category"
+                    id="category"
+                    v-model="addsend.categoris_id"
+                    class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                  >
+                    <option
+                      v-for="(category, index) in categorys"
+                      :key="index"
+                      :value="category.id"
+                    >
+                      {{ category.name }}
+                    </option>
+                    <!-- Ajoutez plus d'options au besoin -->
+                  </select>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Image" />
                   <BaseInput
-                    id="language"
+                    id="image"
                     type="file"
-                    v-model="addform.language"
+                    @change="onFileChangeRepas"
                     class="mt-2"
                   />
                 </div>
@@ -296,8 +573,8 @@
     </template>
     <template #footer>
       <AddModalFooter
-        @cancel="showModalRestaurantUpdate = false"
-        @send="addContact()"
+        @cancel="showModalRepasCreate = false"
+        @send="addRepas()"
       />
     </template>
   </TheModal>
@@ -305,14 +582,19 @@
 
 <script>
 import axios from "axios";
+import Noty from "noty";
+import "noty/lib/noty.css";
+import "noty/lib/themes/mint.css";
 import DeleteModalFooter from "../components/DeleteModalFooter.vue";
 import TheModal from "../components/TheModal.vue";
 import BaseLabel from "../components/BaseLabel.vue";
 import BaseInput from "../components/BaseInput.vue";
 import AddModalFooter from "../components/AddModalFooter.vue";
+import AlertComponent from "../components/AlertComponent.vue";
 export default {
   name: "RestaurantDash",
   components: {
+    AlertComponent,
     DeleteModalFooter,
     TheModal,
     BaseLabel,
@@ -334,35 +616,70 @@ export default {
         abonnement_id: "",
         user_id: "",
         image_url: "",
-        specilite:"",
-        heure_douverture:"",
-        heure_fermeture:"",
-        document_url:"",
-        capacite:"",
-
+        specilite: "",
+        heure_douverture: "",
+        heure_fermeture: "",
+        document_url: "",
+        capacite: "",
       },
+      addsend: {
+        categoris_id: "",
+        name: "",
+        description: "",
+        prix: "",
+        image_url: "",
+      },
+      addforms: {
+        restaurant_id: "",
+        name: "*",
+        description: "",
+        prix: "",
+        repas_id: "",
+      },
+      showAlert: false,
       alert: {
-        type: "",
         message: "",
       },
       processing: false,
       showDeleteRestaurantModal: false,
       showModalRestaurant: false,
       showModalRestaurantUpdate: false,
+      showModalRepasCreate: false,
+      showModalRepas: false,
       filteredRestaurants: [],
       restaurants: [],
       user: "",
       deleteRestaurantID: "",
+      repass: [],
+      categorys: [],
+      filter: "",
     };
   },
   created() {
     this.profile();
     this.restaurant();
+    this.getRepas();
+    this.getCategorys();
+  },
+  computed: {
+    filteredRestaurant() {
+      const searchTerm = this.filter.toLowerCase();
+      const filtered_data = this.restaurants.filter((restaurants) => {
+        const name = restaurants.user.id.toLowerCase();
+        return name.includes(searchTerm);
+      });
+
+      return filtered_data;
+    },
   },
   methods: {
     deleteRestaurantModal(id) {
       this.showDeleteRestaurantModal = !this.showDeleteRestaurantModal;
       this.deleteRestaurantID = id;
+    },
+    MenuModal(id) {
+      this.showModalRepas = !this.showModalRepas;
+      this.addforms.restaurant_id = id;
     },
     async deleteRestaurant() {
       try {
@@ -382,7 +699,19 @@ export default {
         const response = await axios.get("/api/profile");
         if (response.data) {
           this.user = response.data.id;
+          this.filter = response.data.id;
           console.log(this.user);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async getRepas() {
+      try {
+        const response = await axios.get("/api/repas");
+        if (response.data) {
+          this.repass = response.data.data;
+          console.log(this.repass);
         }
       } catch (error) {
         console.log(error.data);
@@ -393,7 +722,7 @@ export default {
         const response = await axios.get("/api/restaurants");
         if (response.data) {
           this.restaurants = response.data.data;
-          console.log(this.restaurants);
+          // console.log(this.restaurants);
           this.filteredRestaurants = this.restaurants.filter(
             (restaurant) => restaurant.user.id === this.user
           );
@@ -403,7 +732,17 @@ export default {
         console.log(error.data);
       }
     },
-
+    async getCategorys() {
+      try {
+        const response = await axios.get("/api/categorys");
+        if (response.data) {
+          this.categorys = response.data.data;
+          console.log(this.categorys);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
     addRestaurant() {
       const formData = new FormData();
 
@@ -432,13 +771,132 @@ export default {
         const response = await axios.post("/api/restaurants", this.addform);
         if (response.status == 201) {
           console.log(response);
-          this.$router.push("/");
+          this.showModalRestaurant = !this.showModalRestaurant;
+          this.addform = {};
+          new Noty({
+            type: "success",
+            layout: "topRight",
+            text: "Votre Restaurant est créer avec succés",
+            timeout: 5000,
+          }).show();
+          this.restaurant();
+        } else {
+          this.showModalRepas = !this.showModalRepas;
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
         }
       } catch (error) {
-        console.log(error.data);
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+    async addMenu() {
+      try {
+        const response = await axios.post("/api/menus", this.addforms);
+        if (response.status == 201) {
+          console.log(response);
+          this.showModalRepas = !this.showModalRepas;
+          this.addforms = {};
+          new Noty({
+            type: "success",
+            layout: "topRight",
+            text: "Votre Menu est créer avec succés",
+            timeout: 5000,
+          }).show();
+          this.getMenus();
+        } else {
+          this.showModalRepas = !this.showModalRepas;
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
       }
     },
     onFileChange(e) {
+      const file = e.target.files[0];
+      this.image = file;
+    },
+    addRepas() {
+      const formData = new FormData();
+
+      formData.append("file", this.image);
+
+      axios
+        .post("api/medias", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response.status == 201) {
+            this.addsend.image_url = response.data.data.media_url;
+            console.log(this.addsend.image_url);
+            this.sendRepas();
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    async sendRepas() {
+      try {
+        this.addsend.user_id = this.user;
+        const response = await axios.post("/api/repas", this.addsend);
+        if (response.status == 201) {
+          console.log(response);
+          this.showModalRepasCreate = !this.showModalRepasCreate;
+          this.addsend = {};
+          this.showModalRepas = !this.showModalRepas;
+          new Noty({
+            type: "success",
+            layout: "topRight",
+            text: "Votre Repas est créer avec succés",
+            timeout: 5000,
+          }).show();
+          this.getRepas();
+        } else {
+          this.showModalRepasCreate = !this.showModalRepasCreate;
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+    onFileChangeRepas(e) {
       const file = e.target.files[0];
       this.image = file;
     },

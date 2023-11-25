@@ -9,7 +9,7 @@
       <div class="p-4 text-2xl font-bold">Dashboard</div>
 
       <!-- Menu de la barre latérale -->
-      <ul class="py-4">
+      <ul v-if="this.user === this.role_id" class="py-4">
         <li class="px-4 py-2 hover:bg-gray-600">
           <router-link
             class="text-slate-950 hover:text-gray-300"
@@ -33,7 +33,7 @@
             class="text-slate-950 hover:text-gray-300"
             active-class="text-green-600"
             to="/menudash"
-            >Menus</router-link
+            >Mon menus</router-link
           >
         </li>
         <li class="px-4 py-2 hover:bg-gray-600">
@@ -41,7 +41,7 @@
             class="text-slate-950 hover:text-gray-300"
             active-class="text-green-600"
             to="/restaurantdash"
-            >Restaurants</router-link
+            >Mon restaurants</router-link
           >
         </li>
         <li class="px-4 py-2 hover:bg-gray-600">
@@ -49,7 +49,7 @@
             class="text-slate-950 hover:text-gray-300"
             active-class="text-green-600"
             to="/reservationDash"
-            >Reservations</router-link
+            >Mes reservations</router-link
           >
         </li>
         <li class="px-4 py-2 hover:bg-gray-600">
@@ -57,7 +57,7 @@
             class="text-slate-950 hover:text-gray-300"
             active-class="text-green-600"
             to="/commandeDash"
-            >List Commandes</router-link
+            >Mes Commandes</router-link
           >
         </li>
 
@@ -74,7 +74,7 @@
           <router-link
             class="text-slate-950 hover:text-gray-300"
             active-class="text-green-600"
-            to="/livraisonDash"
+            to="/livraisonResto"
             >Livraisons</router-link
           >
         </li>
@@ -83,10 +83,30 @@
           <router-link
             class="text-slate-950 hover:text-gray-300"
             active-class="text-green-600"
+            to="/"
+            >Aller au site</router-link
+          >
+        </li>
+      </ul>
+      <ul v-else class="py-4">
+        <li class="px-4 py-2 hover:bg-gray-600">
+          <router-link
+            class="text-slate-950 hover:text-gray-300"
+            active-class="text-green-600"
+            to="/livraisonDash"
+            >Livraisons</router-link
+          >
+        </li>
+         <h1 class="text-4xl font-bold border border-red-200 mt-4"></h1>
+        <li class="px-4 py-2 hover:bg-gray-600">
+          <router-link
+            class="text-slate-950 hover:text-gray-300"
+            active-class="text-green-600"
             to="/profils"
             >Profils</router-link
           >
         </li>
+        
         <h1 class="text-4xl font-bold border border-red-200 mt-4"></h1>
         <li class="px-4 py-2 hover:bg-gray-600">
           <router-link
@@ -107,7 +127,45 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Dashboard",
+
+  data() {
+    return {
+      user: "",
+      role_id: "",
+    };
+  },
+  created() {
+    this.profile();
+    this.role();
+  },
+  methods: {
+    async profile() {
+      try {
+        const response = await axios.get("/api/profile");
+        if (response.data) console.log(response.data);
+        {
+          this.user = response.data.role_id;
+          console.log(this.user);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async role() {
+      try {
+        const response = await axios.get("/api/roles");
+        if (response.data) {
+          console.log(response.data);
+          this.role_id = response.data.data[2].id;
+          console.log(this.role_id);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+  },
 };
 </script>

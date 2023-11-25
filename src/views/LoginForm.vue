@@ -2,9 +2,12 @@
 import axios from "axios";
 import TokenService from "../services/storage.service";
 import ApiService from "../services/api.service";
+import AlertComponent from "../components/AlertComponent.vue";
 export default {
   name: "LoginForm",
-
+  components: {
+    AlertComponent,
+  },
   data() {
     return {
       form: {
@@ -12,31 +15,83 @@ export default {
         password: "",
         // local: null,
       },
+      showAlert: false,
       alert: {
-        type: "",
         message: "",
       },
       processing: false,
+      user: "",
+      role_id: "",
+      roles_id: "",
     };
   },
-  // created() {
-  //   this.form.local = this.$i18n.locale;
-  // },
+  created() {
+    this.role();
+  },
   methods: {
-    async login() {
+    async profile() {
       try {
-        const response = await axios.post(
-          '/api/auth/login',
-          this.form
-        );
-       if (response.data.access_token) {
-          TokenService.saveToken(response.data.access_token);
-          ApiService.setHeader();
-        
-          this.$router.push("/restaurantdash");
+        const response = await axios.get("/api/profile");
+        if (response.data) console.log(response.data);
+        {
+          this.user = response.data.role_id;
+          console.log(this.user);
         }
       } catch (error) {
         console.log(error.data);
+      }
+    },
+    async role() {
+      try {
+        const response = await axios.get("/api/roles");
+        if (response.data) {
+          console.log(response.data);
+          this.role_id = response.data.data[2].id;
+          this.roles_id = response.data.data[1].id;
+          console.log(this.role_id);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async login() {
+      try {
+        const response = await axios.post("/api/auth/login", this.form);
+        if (response.data.access_token) {
+          TokenService.saveToken(response.data.access_token);
+          ApiService.setHeader();
+          this.profile();
+          //this.role();
+
+          if (this.user === this.role_id && this.user !== this.roles_id) {
+            this.$router.push("/restaurantdash");
+          } else if (this.user === this.roles_id) {
+            this.$router.push("/livraisonDash");
+          }
+        } else {
+          // Gestion d'une réponse sans jeton d'accès
+          this.showModalRepas = !this.showModalRepas;
+          this.showAlert = true;
+          this.alert.message =
+            "Erreur lors de la connexion. Veuillez réessayer plus tard.";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      } catch (error) {
+        // Gestion des erreurs HTTP
+        if (error.response && error.response.status === 422) {
+          this.showAlert = true;
+          this.alert.message = "Adresse e-mail ou mot de passe incorrect.";
+        } else {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose s'est mal passé. Merci d'essayer plus tard.";
+        }
+
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 5000);
       }
     },
   },
@@ -47,12 +102,15 @@ export default {
   <div
     class="p-6 space-y-4 md:space-y-6 sm:p-8 w-1/3 text-white mx-auto my-auto mt-4 mb-4 box-shadow-all-sides"
   >
+    <div v-show="showAlert">
+      <AlertComponent :content="alert.message" type-alert="error" />
+    </div>
     <h1 class="font-bold text-xl text-white">Se connecter</h1>
     <form
       method="POST"
       action="#"
       class="space-y-4 md:space-y-6"
-      @submit.prevent="login()"
+      @submit.prevent="login"
     >
       <div class="">
         <label class="block font-bold text-sm text-white text-left"

@@ -1,36 +1,79 @@
 <script>
 import axios from "axios";
+import BaseLabel from "../components/BaseLabel.vue";
+import AlertComponent from "../components/AlertComponent.vue";
 export default {
   name: "RegisterFrom",
-
+  components: {
+    BaseLabel,
+    AlertComponent
+  },
   data() {
     return {
       form: {
         name: "",
         email: "",
         password: "",
+        role_id: "",
         // local: null,
       },
+      showAlert: false,
       alert: {
-        type: "",
         message: "",
       },
       processing: false,
+       role_id: "",
+       role_ids: "",
     };
   },
-  // created() {
-  //   this.form.local = this.$i18n.locale;
-  // },
+   created() {
+    this.role();
+   },
   methods: {
+    livreur() {
+      this.form.role_id = this.role_ids;
+    },
+    Restaurant() {
+      this.form.role_id = this.role_id;
+    },
     async register() {
       try {
         const response = await axios.post("/api/auth/register", this.form);
-        console.log(response);
-        this.$router.push("/auth/login");
+        if(response.data.access_token){
+          this.$router.push("/auth/login");
+        }else {
+          this.showModalRepas = !this.showModalRepas;
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
       } catch (error) {
-        
-          console.log(error)
-        
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+     async role() {
+      try {
+        const response = await axios.get("/api/roles");
+        if (response.data) 
+        {
+          console.log(response.data);
+          this.role_id = response.data.data[2].id;
+          this.role_ids = response.data.data[1].id;
+          console.log(this.role_id);
+          console.log(this.role_ids);
+        }
+      } catch (error) {
+        console.log(error.data);
       }
     },
   },
@@ -39,8 +82,11 @@ export default {
 
 <template>
   <div
-    class="p-6 space-y-4 md:space-y-6 sm:p-8 w-2/3 mx-auto my-auto mt-24 box-shadow-all-sides"
+    class="p-6 space-y-4 md:space-y-6 sm:p-8 w-2/3 mx-auto my-auto mt-12 box-shadow-all-sides"
   >
+   <div v-show="showAlert">
+      <AlertComponent :content="alert.message" type-alert="error" />
+    </div>
     <h1 class="font-bold text-xl">Créez votre compte gratuit</h1>
     <form
       method="POST"
@@ -48,6 +94,35 @@ export default {
       class="space-y-4 md:space-y-6"
       @submit.prevent="register()"
     >
+      <h3 class="font-sans text-lg">Vous voulez créer quel type de compte</h3>
+      <div class="flex ml-24">
+        <div class="flex">
+          <div class="sm:block">
+            <input
+              id="message_texte"
+              type="radio"
+              name="message_type"
+              @click="Restaurant()"
+            />
+          </div>
+          <div class="ml-4 sm:block">
+            <BaseLabel value="Restaurant" />
+          </div>
+        </div>
+        <div class="flex ml-24">
+          <div class="sm:block">
+            <input
+              id="message_texte"
+              type="radio"
+              name="message_type"
+              @click="livreur()"
+            />
+          </div>
+          <div class="ml-4 sm:block">
+            <BaseLabel value="Livreur" />
+          </div>
+        </div>
+      </div>
       <div class="">
         <label class="block font-bold text-sm text-gray-700 text-left"
           >Name</label

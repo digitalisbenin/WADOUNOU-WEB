@@ -16,8 +16,10 @@ import LivreurDash from './views/LivreurDash.vue';
 import RepasDash from './views/RepasDash.vue';
 import MenuDash from './views/MenuDash.vue';
 import LivraisonDash from './views/LivraisonDash.vue';
+import LivraisonRestaurant from './views/LivraisonRestaurant.vue';
 import ReservationDash from './views/ReservationDash.vue';
 import Profils from './views/Profils.vue';
+import Propos from './views/Propos.vue';
 import LoginForm from './views/LoginForm.vue';
 import RegisterFrom from './views/RegisterFrom.vue';
 import DashLayout from './layouts/DashLayout.vue';
@@ -29,10 +31,14 @@ import RegisterLayout from './layouts/RegisterLayout.vue';
 const routes = [
   { path: '/', component: Home },
   { path: '/restaurant', component: Restaurant },
+  { path: '/propos', component: Propos },
   { path: '/repas', component: Repas },
   { path: '/reservation', component: Reservation },
   { path: '/commande', component: Commande },
-  { path: '/restaurantdetail', component: RestaurantDetail },
+  {
+    path: "/restaurantdetail/:id",
+    component: RestaurantDetail,
+  },
   {
     path: '/auth/login',
     component: LoginForm,
@@ -48,6 +54,7 @@ const routes = [
     component: RestaurantDash,
     meta: { layout: DashLayout, public: false },
   },
+ 
   {
     path: "/commandeDash",
     component: CommandeDash,
@@ -76,6 +83,11 @@ const routes = [
   {
     path: "/livraisonDash",
     component: LivraisonDash,
+    meta: { layout: DashLayout, public: false },
+  },
+  {
+    path: "/livraisonResto",
+    component: LivraisonRestaurant,
     meta: { layout: DashLayout, public: false },
   },
   {

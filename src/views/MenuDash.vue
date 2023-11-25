@@ -3,6 +3,9 @@
     class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white p-4 mt-9"
   >
     <div class="flex items-center justify-between pb-4">
+       <div v-show="showAlert">
+      <AlertComponent :content="alert.message" type-alert="error" />
+    </div>
       <label for="table-search" class="sr-only">Rechercher</label>
       <div class="relative">
         <div
@@ -44,10 +47,9 @@
         class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr>
-          <th scope="col" class="px-6 py-3">Nom</th>
+          <th scope="col" class="px-6 py-3">Nom Repas</th>
           <th scope="col" class="px-6 py-3">Description</th>
           <th scope="col" class="px-6 py-3">Prix</th>
-          <th scope="col" class="px-6 py-3">Nom Repas</th>
           <th scope="col" class="px-6 py-3">Action</th>
         </tr>
       </thead>
@@ -61,12 +63,11 @@
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{ menu.name }}
+            {{ menu.repas.name }}
           </th>
           <td class="px-6 py-4">{{ menu.description }}</td>
           <td class="px-6 py-4">{{ menu.prix }}</td>
-          <td class="px-6 py-4">{{ menu.repas.name }}</td>
-
+       
           <td class="flex items-center px-6 py-4 space-x-3">
             <a
               class="text-blue-600 font-medium hover:bg-gray-100 hover:rounded-lg"
@@ -137,23 +138,7 @@
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
               <div class="grid grid-cols-8 gap-6">
-                <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Nom " />
-                  <BaseInput id="nom" v-model="addform.name" class="mt-2" />
-                </div>
-                <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Prix" />
-                  <BaseInput id="prenom" v-model="addform.prix" class="mt-2" />
-                </div>
-                <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Description" />
-                  <BaseInput
-                    id="language"
-                    v-model="addform.description"
-                    class="mt-2"
-                  />
-                </div>
-                <div class="col-span-8 sm:col-span-8">
+               <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Choisissez un repas" />
                   <select
                     name="category"
@@ -189,6 +174,20 @@
                     <!-- Ajoutez plus d'options au besoin -->
                   </select>
                 </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Prix" />
+                  <BaseInput id="prenom" v-model="addform.prix" class="mt-2" />
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Description" />
+                  <textarea
+                      class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                      v-model="addform.description"
+                      autocomplete="current-password"
+                      required
+                    />
+                </div>
+                
               </div>
             </div>
           </div>
@@ -268,15 +267,20 @@
 
 <script>
 import axios from "axios";
+import Noty from 'noty';
+import 'noty/lib/noty.css';
+import 'noty/lib/themes/mint.css';
 import { mapState } from "vuex";
 import DeleteModalFooter from "../components/DeleteModalFooter.vue";
 import TheModal from "../components/TheModal.vue";
 import BaseLabel from "../components/BaseLabel.vue";
 import BaseInput from "../components/BaseInput.vue";
 import AddModalFooter from "../components/AddModalFooter.vue";
+import AlertComponent from "../components/AlertComponent.vue";
 export default {
   name: "RepasDash",
   components: {
+    AlertComponent,
     DeleteModalFooter,
     TheModal,
     BaseLabel,
@@ -286,14 +290,14 @@ export default {
   data() {
     return {
       addform: {
-        categoris_id: "",
-        name: "",
+        restaurant_id: "",
+        name: "*",
         description: "",
         prix: "",
-        image_url: "",
+        repas_id: "",
       },
+      showAlert: false,
       alert: {
-        type: "",
         message: "",
       },
       processing: false,
@@ -304,15 +308,50 @@ export default {
       user: "",
       restaurant_id:"",
       filteredRestaurants: [],
-      filteredMenus: [],
+   
       restaurants: [],
       menus: [],
+       filter: "",
+       filters: "",
+       
     };
   },
   computed: {
     ...mapState({
       repas: (state) => state.repas.repas,
-    }),
+       }),
+      filteredRestaurant() {
+      const searchTerm = this.filter.toLowerCase();
+      const filtered_data = this.restaurants.filter((restaurants) => {
+        const name = restaurants.user.id.toLowerCase();
+        return name.includes(searchTerm);
+      });
+
+      return filtered_data;
+    },
+    filteredMenus() {
+  // Vérifiez si filteredRestaurant n'est pas vide
+  if (this.filteredRestaurant.length > 0) {
+    // Sélectionnez le premier élément de filteredRestaurant
+    const selectedRestaurant = this.filteredRestaurant[0];
+    
+    // Utilisez l'ID du restaurant sélectionné pour filtrer les menus
+    const searchTerm = selectedRestaurant.id.toLowerCase();
+    
+    // Filtrez les menus basés sur l'ID du restaurant
+    const filtered_data = this.menus.filter((menu) => {
+      const restaurantId = menu.restaurant.id.toLowerCase();
+      return restaurantId.includes(searchTerm);
+    });
+
+    return filtered_data;
+  } else {
+    // Retournez tous les menus si filteredRestaurant est vide
+    return this.menus;
+  }
+},
+
+   
   },
   created() {
     this.profile();
@@ -320,12 +359,14 @@ export default {
     this.restaurant();
     this.getMenus();
   },
+
   methods: {
     async profile() {
       try {
         const response = await axios.get("/api/profile");
         if (response.data) {
           this.user = response.data.id;
+          this.filter = response.data.id;
           console.log(this.user);
         }
       } catch (error) {
@@ -338,12 +379,6 @@ export default {
         if (response.data) {
           this.restaurants = response.data.data;
           console.log(this.restaurants);
-          this.filteredRestaurants = this.restaurants.filter(
-            (restaurant) => restaurant.user.id === this.user
-          );
-          console.log(this.filteredRestaurants);
-          this.restaurant_id = this.filteredRestaurants[0].id;
-            console.log(this.restaurant_id);
         }
       } catch (error) {
         console.log(error.data);
@@ -368,10 +403,7 @@ export default {
             console.log(response.data.data);
           this.menus = response.data.data;
           console.log(this.menus);
-           this.filteredMenus = this.menus.filter(
-            (menu) => menu.restaurant.id === this.restaurant_id
-          );
-          console.log(this.filteredMenus);
+          
         }
         
       } catch (error) {
@@ -387,10 +419,33 @@ export default {
         const response = await axios.post("/api/menus", this.addform);
         if (response.status == 201) {
           console.log(response);
-          this.$router.push("/");
+          this.showModalRepas =!this.showModalRepas;
+          this.addform ={};
+            new Noty({
+            type: 'success',
+            layout: 'topRight',
+            text: 'Votre Menu est créer avec succés',
+            timeout: 5000,
+          }).show( );
+          this.getMenus();
+        }else {
+          this.showModalRepas =!this.showModalRepas;
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
         }
       } catch (error) {
-        console.log(error.data);
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
       }
     },
   },

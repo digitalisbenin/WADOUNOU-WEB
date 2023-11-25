@@ -1,6 +1,9 @@
 <template>
   <div class="">
     <div class="custom-background h-96"></div>
+    <div v-show="showAlert">
+      <AlertComponent :content="alert.message" type-alert="error" />
+    </div>
     <div class="flex">
       <div class="w-1/3 mt-9">
         <transition name="fade" mode="out-in">
@@ -69,12 +72,13 @@
       </div>
     </div>
      <label for="restaurant" class="mb-3 block text-2xl font-bold mt-12">
-              Recherchez un repas
+              Recherchez un restaurant
             </label>
     <div
       class="rounded-full p-1 mt-4 box-border border border-orange-500 mx-auto my-auto bg-white overflow-hidden ring-red-300 focus:ring-4 w-2/4 flex items-center py-1"
     >
       <input
+      v-model="filter"
         type="text"
         class="rounded-full px-4 focus:outline-none w-full"
         placeholder="Recherche ......."
@@ -99,10 +103,11 @@
               name="restaurant"
               id="restaurant"
               v-model="addform.restaurant_id"
+              @click="search"
               class="w-full rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             >
               <option
-                v-for="(restaurant, index) in restaurants"
+                v-for="(restaurant, index) in filteredRestaurants"
                 :key="index"
                 :value="restaurant.id"
               >
@@ -120,7 +125,7 @@
               name="guest"
               id="guest"
               v-model="addform.place"
-              placeholder="5"
+              placeholder="1"
               min="0"
               class="w-full appearance-none rounded-md border border-gray-400 bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
@@ -128,7 +133,7 @@
           <div class=" mx-24 ">
               <div class="mb-5 ">
                 <label for="lName" class="mb-3 block text-2xl font-bold">
-                  Info Complementaire
+                  Informations Complémentaires
                 </label>
                 <input
                   type="text"
@@ -195,7 +200,7 @@
             <button
               class="hover:shadow-form rounded-md bg-green-600 py-3 px-8 text-center text-base font-semibold text-white outline-none"
             >
-              soumettre
+              Soumettre
             </button>
           </div>
         </form>
@@ -206,8 +211,16 @@
   
   <script>
 import axios from "axios";
+import Noty from 'noty';
+import 'noty/lib/noty.css';
+import 'noty/lib/themes/mint.css';
+import AlertComponent from "../components/AlertComponent.vue";
 export default {
   name: "App",
+  components: {
+   
+    AlertComponent
+  },
   data() {
     return {
       images: [
@@ -249,11 +262,28 @@ export default {
       },
       restaurants: [],
       user: "",
+       filter:"",
+       showAlert: false,
+      alert: {
+        message: "",
+      },
     };
+  },
+  computed:{
+  
+  filteredRestaurants() {
+    const searchTerm = this.filter.toLowerCase();
+    const filtered_data = this.restaurants.filter((restaurants) => {
+      const name = restaurants.name.toLowerCase();
+      const adresse = restaurants.adresse.toLowerCase();
+      return name.includes(searchTerm) ||  adresse.includes(searchTerm);
+    });
+    return filtered_data;
+  },
   },
   mounted() {
     this.startSlider();
-    this.profile();
+   // this.profile();
     this.restaurant();
   },
   methods: {
@@ -262,13 +292,18 @@ export default {
         this.currentImage = (this.currentImage + 1) % this.images.length;
       }, 5000); // Défilement toutes les 5 secondes
     },
+    search() {
+      if (this.addform.restaurant_id !== "" ) {
+        this.filter = "";
+      }
+    },
     async profile() {
       try {
         const response = await axios.get("/api/profile");
         if (response.data) {
           this.user = response.data.id;
           console.log(this.user);
-          this.filterRestaurantsByUser(this.user);
+          
         }
       } catch (error) {
         console.log(error.data);
@@ -289,11 +324,31 @@ export default {
       try {
         const response = await axios.post("/api/reservations", this.addform);
         if (response.status == 201) {
-          console.log(response);
-          this.$router.push("/");
+          this.addform ={};
+          new Noty({
+            type: 'success',
+            layout: 'topRight',
+            text: 'Votre reservation à été éffectuer avec succés',
+            timeout: 5000,
+          }).show( );
+        }else {
+          this.showModalRepas = !this.showModalRepas;
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
         }
       } catch (error) {
-        console.log(error);
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
       }
     },
   },

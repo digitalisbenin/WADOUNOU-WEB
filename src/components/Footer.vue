@@ -35,10 +35,15 @@
               <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
             </svg></a></li>
             </ul>
+            <h2 class="text-xl font-semibold mt-2">Notre site</h2>
+            <a href="https://digitalis-benin.com/" class=" text-white hover:text-gray-400">digitalis-benin.com</a>
           </div>
         </div>
       </div>
+     
     </footer>
+     <div class="bg-gray-700 h-6"> <h2 class="text-sm text-white font-semibold ">Copyright@ 2023 dévolopper par Digitalis
+</h2></div>
   </template>
   
   <script>

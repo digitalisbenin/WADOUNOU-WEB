@@ -36,7 +36,7 @@
       <div>
         <button
           class="inline-flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          @click="showModalLivreur = true"
+          @click="showModalLivraison = true"
         >
           Ajouter
         </button>
@@ -48,17 +48,16 @@
       >
         <tr>
           <th scope="col" class="px-6 py-3">Nom</th>
-          <th scope="col" class="px-6 py-3">Description</th>
-          <th scope="col" class="px-6 py-3">Adresse</th>
+          <th scope="col" class="px-6 py-3">Address</th>
           <th scope="col" class="px-6 py-3">Phone</th>
-          <th scope="col" class="px-6 py-3">Position</th>
+          <th scope="col" class="px-6 py-3">Nom livreur</th>
           <th scope="col" class="px-6 py-3">Status</th>
-          
+          <th scope="col" class="px-6 py-3">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr
-          v-for="(livreur, index) in livreurs"
+          v-for="(livraison, index) in livraisons"
           :key="index"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
@@ -66,15 +65,15 @@
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{ livreur.name }}
+            {{ livraison.commande.name }}
           </th>
-          <td class="px-6 py-4">{{ livreur.description }}</td>
-          <td class="px-6 py-4">{{ livreur.adresse }}</td>
-          <td class="px-6 py-4">{{ livreur.phone }}</td>
-          <td class="px-6 py-4">{{ livreur.position }}</td>
-           <td class="px-6 py-4">
+          <td class="px-6 py-4">{{ livraison.commande.adresse }}</td>
+          <td class="px-6 py-4">{{ livraison.commande.contact }}</td>
+          <td class="px-6 py-4">{{ livraison.livreur.name }}</td>
+          
+            <td class="px-6 py-4">
             <span
-              v-if="livreur.status === 'en cours livrason'"
+              v-if="livraison.status === 'En cours'"
               class="text-uppercase inline-flex items-center rounded-full px-2.5 py-1 text-sm bg-blue-600 text-gray-900"
             >
               <span class="relative mr-1.5 flex h-2.5 w-2.5">
@@ -83,10 +82,10 @@
                 >
                 </span>
               </span>
-              {{ livreur.status }}
+              {{ livraison.status }}
             </span>
             <span
-              v-if="livreur.status === 'occuper'"
+              v-if="livraison.status === 'suspended'"
               class="text-uppercase inline-flex items-center rounded-full px-2.5 py-1 text-sm bg-red-600 text-gray-900"
             >
               <span class="relative mr-1.5 flex h-2.5 w-2.5"
@@ -94,10 +93,10 @@
                   class="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-400"
                 ></span
               ></span>
-              {{ livreur.status }}</span
+              {{ livraison.status }}</span
             >
             <span
-              v-if="livreur.status === 'disponible'"
+              v-if="livraison.status === 'Terminer'"
               class="text-uppercase inline-flex items-center rounded-full px-2.5 py-1 text-sm bg-green-600 text-gray-900"
             >
               <span class="relative mr-1.5 flex h-2.5 w-2.5">
@@ -106,64 +105,74 @@
                 >
                 </span>
               </span>
-              {{ livreur.status }}
+              {{ livraison.status }}
             </span>
           </td>
-          
+          <td class="flex items-center px-6 py-4 space-x-3">
+           
+                <label
+                  class="flex items-center relative w-max cursor-pointer select-none"
+                >
+                  <input
+                    type="checkbox"
+                    class="appearance-none transition-colors cursor-pointer w-14 h-7 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 bg-red-500"
+                  />
+                  
+                  
+                  <span
+                    class="w-7 h-7 right-7 absolute rounded-full transform transition-transform bg-gray-200"
+                  />
+                </label>
+             
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
   <DeleteModalFooter
     width="w-full md:w-2/3 lg:w-1/3"
-    :is-open="showDeleteLivreurModal"
-    @cancel="showDeleteLivreurModal = !showDeleteLivreurModal"
+    :is-open="showDeleteLivraisonModal"
+    @cancel="showDeleteLivraisonModal = !showDeleteLivraisonModal"
     @delete="deleteRestaurant()"
   >
     <template #header>Supprimer</template>
-    <template #body> Vous voulez suppprimer ce livreur </template>
+    <template #body> Vous voulez suppprimer cet livraison </template>
   </DeleteModalFooter>
   <TheModal
     width="w-full md:w-2/3 lg:w-1/2"
-    :is-open="showModalLivreur"
-    @close-modal="showModalLivreur = false"
+    :is-open="showModalLivraison"
+    @close-modal="showModalLivraison = false"
   >
-    <template #header> Ajouter un Livreur</template>
+    <template #header> Ajouter une Livraison</template>
 
     <template #body>
-      <form action="#" method="POST" @submit.prevent="addLivreur()">
+      <form action="#" method="POST" @submit.prevent="livraison()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
               <div class="grid grid-cols-8 gap-6">
                 <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Nom " />
-                  <BaseInput id="nom" v-model="addform.name" class="mt-2" />
+                  <BaseInput
+                    id="nom"
+                    v-model="addform.name"
+                    class="mt-2"
+                  />
                 </div>
                 <div class="col-span-8 sm:col-span-4">
                   <BaseLabel value="Adresse" />
                   <BaseInput
                     id="prenom"
-                    v-model="addform.adresse"
+                    v-model="addform.addrese"
                     class="mt-2"
                   />
                 </div>
-                <div class="col-span-8 sm:col-span-4">
+                <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Télephone" />
                   <div class="relative mt-1">
                     <BaseInput
                       v-model="addform.phone"
                       placeholder="62333333"
-                      class="mt-2"
-                    />
-                  </div>
-                </div>
-                <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Position" />
-                  <div class="relative mt-1">
-                    <BaseInput
-                      v-model="addform.position"
-                      placeholder="itta"
                       class="mt-2"
                     />
                   </div>
@@ -177,22 +186,54 @@
                   />
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Image" />
-                  <BaseInput
-                    id="image"
-                    type="file"
-                    @change="onFileChange"
-                    class="mt-2"
-                  />
+                <BaseLabel value="Status" />
+                
+                  <select
+                    id="compagnie"
+                    v-model="addform.status"
+                    class="rounded border border-gray-300 mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2 px-9"
+                    placeholder="status"
+                  >
+                    <option value="En cours">En cours</option>
+                    <option value="suspended">Suspend</option>
+                    <option value="Terminer">Terminer</option>
+                  </select>
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="document(facultatif)" />
-                  <BaseInput
-                    id="pdf"
-                    type="file"
-                    @change="onFileChanges"
-                    class="mt-2"
-                  />
+                  <BaseLabel value="Choisissez la commande" />
+                  <select
+                    name="restaurant"
+                    id="restaurant"
+                    v-model="addform.commande_id"
+                    class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                  >
+                    <option
+                      v-for="(commande, index) in commandes"
+                      :key="index"
+                      :value="commande.id"
+                    >
+                      {{ commande.name }}
+                    </option>
+                    <!-- Ajoutez plus d'options au besoin -->
+                  </select>
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Choisissez le livreur" />
+                  <select
+                    name="restaurant"
+                    id="restaurant"
+                    v-model="addform.livreur_id"
+                    class="block w-full p-2 border mt-2 border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                  >
+                    <option
+                      v-for="(livreur, index) in livreurs"
+                      :key="index"
+                      :value="livreur.id"
+                    >
+                      {{ livreur.name }}
+                    </option>
+                    <!-- Ajoutez plus d'options au besoin -->
+                  </select>
                 </div>
               </div>
             </div>
@@ -201,15 +242,18 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter @cancel="showModalLivreur = false" @send="addLivreur()" />
+      <AddModalFooter
+        @cancel="showModalLivraison = false"
+        @send="livraison()"
+      />
     </template>
   </TheModal>
   <TheModal
     width="w-full md:w-2/3 lg:w-1/2"
-    :is-open="showModalLivreurUpdate"
-    @close-modal="showModalLivreurUpdate = false"
+    :is-open="showModalLivraisonUpdate"
+    @close-modal="showModalLivraisonUpdate = false"
   >
-    <template #header> Mettre à jour un Livreur</template>
+    <template #header> Mettre à jour une Livraison</template>
 
     <template #body>
       <form action="#" method="POST" @submit.prevent="addContact()">
@@ -233,17 +277,7 @@
                     class="mt-2"
                   />
                 </div>
-                <div class="col-span-8 sm:col-span-4">
-                  <BaseLabel value="Télephone" />
-                  <div class="relative mt-1">
-                    <BaseInput
-                      v-model="phone"
-                      placeholder="62333333"
-                      class="mt-2"
-                    />
-                  </div>
-                </div>
-                <div class="col-span-8 sm:col-span-4">
+                <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Télephone" />
                   <div class="relative mt-1">
                     <BaseInput
@@ -261,6 +295,19 @@
                     class="mt-2"
                   />
                 </div>
+
+                <BaseLabel value="Status" />
+                <div class="mt-auto">
+                  <select
+                    id="compagnie"
+                    class="rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 block w-full p-2 px-9"
+                    :placeholder="status"
+                  >
+                    <option>En cours</option>
+                    <option>Suspend</option>
+                    <option>Terminer</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -269,7 +316,7 @@
     </template>
     <template #footer>
       <AddModalFooter
-        @cancel="showModalLivreurUpdate = false"
+        @cancel="showModalLivraisonUpdate = false"
         @send="addContact()"
       />
     </template>
@@ -285,10 +332,10 @@ import DeleteModalFooter from "../components/DeleteModalFooter.vue";
 import TheModal from "../components/TheModal.vue";
 import BaseLabel from "../components/BaseLabel.vue";
 import BaseInput from "../components/BaseInput.vue";
-import AlertComponent from "../components/AlertComponent.vue";
 import AddModalFooter from "../components/AddModalFooter.vue";
+import AlertComponent from "../components/AlertComponent.vue";
 export default {
-  name: "LivreurDash",
+  name: "LivraisonDash",
   components: {
     AlertComponent,
     DeleteModalFooter,
@@ -301,35 +348,37 @@ export default {
     return {
       addform: {
         name: "",
-        adresse: "",
-        phone: "",
+        livreur_id: "",
+        address: "",
+        commande_id: "",
         description: "",
-        user_id: "",
-        position: "",
-        document_url: "",
-        status: "disponible",
-        image_url: "",
+        phone: "",
+        status: "",
       },
-    showAlert: false,
+      showAlert: false,
       alert: {
         message: "",
       },
       processing: false,
-      showDeleteLivreurModal: false,
-      showModalLivreur: false,
-      showModalLivreurUpdate: false,
+      showDeleteLivraisonModal: false,
+      showModalLivraison: false,
+      showModalLivraisonUpdate: false,
       user: "",
-      livreurs: [],
-      filteredLivreurs:[],
+      livraisons: [],
+      commandes: [],
+      livreurs:[],
+      
     };
   },
   created() {
     this.profile();
+    this.getLivraison();
+    this.getCommande();
     this.getLivreur();
   },
   methods: {
-    deleteLivreurModal() {
-      this.showDeleteLivreurModal = !this.showDeleteLivreurModal;
+    deleteLivraisonModal() {
+      this.showDeleteLivraisonModal = !this.showDeleteLivraisonModal;
     },
     async profile() {
       try {
@@ -343,57 +392,57 @@ export default {
         console.log(error.data);
       }
     },
-    async getLivreur() {
+    async getLivraison() {
       try {
-        const response = await axios.get("/api/livreurs");
+        const response = await axios.get("/api/livraisons");
         if (response.data) {
-          this.livreurs = response.data.data;
-          console.log(this.livreurs);
-          
+          this.livraisons = response.data.data;
+          console.log(this.livraisons);
         }
       } catch (error) {
         console.log(error.data);
       }
     },
-    addLivreur() {
-      const formData = new FormData();
-
-      formData.append("file", this.image);
-
-      axios
-        .post("api/medias", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          if (response.status == 201) {
-            this.addform.image_url = response.data.data.media_url;
-            console.log(this.addform.image_url);
-            this.sendLivreur();
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    async sendLivreur() {
+       async getLivreur() {
       try {
-        this.addform.user_id = this.user;
-        const response = await axios.post("/api/livreurs", this.addform);
+        const response = await axios.get(
+          '/api/livreurs'
+        );
+       if (response.data) {
+        this.livreurs = response.data.data;
+        console.log(this.livreurs);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async getCommande() {
+      try {
+        const response = await axios.get("/api/commandes");
+        if (response.data) {
+          this.commandes = response.data.data;
+          console.log(this.commandes);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+    async livraison() {
+      try {
+        const response = await axios.post("/api/livraisons", this.addform);
         if (response.status == 201) {
           console.log(response);
-         this.showModalLivreur =!this.showModalLivreur;
+          this.showModalLivraison =!this.showModalLivraison;
           this.addform ={};
             new Noty({
             type: 'success',
             layout: 'topRight',
-            text: 'Votre profile livreur est créer avec succés',
+            text: 'Votre commande est affecter au livreur avec succés',
             timeout: 5000,
           }).show( );
-          this.getLivreur();
+          this.getLivraison();
         }else {
-          this.showModalLivreur =!this.showModalLivreur;
+         this.showModalLivraison =!this.showModalLivraison;
           this.showAlert = true;
           this.alert.message =
             "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
@@ -412,10 +461,26 @@ export default {
         }
       }
     },
-    onFileChange(e) {
-      const file = e.target.files[0];
-      this.image = file;
-    },
   },
 };
 </script>
+<style scoped>
+/* Ajoutez des styles personnalisés pour le slider ici */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+input:checked {
+  background-color: #22c55e; /* bg-green-500 */
+}
+
+input:checked ~ span:last-child {
+  --tw-translate-x: 1.75rem; /* translate-x-7 */
+}
+</style>

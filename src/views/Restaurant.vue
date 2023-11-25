@@ -44,7 +44,7 @@
         </div>
       </div>
  <div class="flex mt-4 flex-wrap">
-    <div v-for="(restaurant, index) in restaurants" :key="index" class="w-1/3 p-4">
+    <div v-for="restaurant in restaurants" :key="restaurant.id" class="w-1/3 p-4">
         <div class="bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl hover:shadow-xl">
 
           <div class="overflow-hidden rounded-2xl flex flex-grow">
@@ -57,7 +57,7 @@
             <div class="flex flex-col space-y-3">
               <h1 class="text-2xl text-gray-800 poppins"> {{restaurant.name}}</h1>
               <p class="text-sm text-gray-500 poppins">{{restaurant.description}}</p>
-              <router-link class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300" active-class="text-green-600" to="/restaurantdetail">Plus
+              <router-link class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300" active-class="text-green-600" :to="`/restaurantdetail/${restaurant.id}`">Plus
                 Info</router-link>
             </div>
           </div>

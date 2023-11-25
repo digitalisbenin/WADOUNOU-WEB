@@ -1,6 +1,9 @@
 <template>
   <div class="">
     <div class="custom-background h-96"></div>
+     <div v-show="showAlert">
+      <AlertComponent :content="alert.message" type-alert="error" />
+    </div>
     <div class="flex">
       <div class="w-1/3 mt-4">
         <transition name="fade" mode="out-in">
@@ -55,7 +58,7 @@
         <h1 class="text-4xl font-bold border border-red-200 mt-4"></h1>
       </div>
     </div>
-    <div class="flex mt-4 flex-wrap p-12">
+    <div class="flex mt-4 flex-wrap">
       <div v-for="(repas, index) in repass" :key="index" class="w-1/4 p-4">
         <div
           class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 rounded-lg relative ml-4"
@@ -75,7 +78,7 @@
             </h2>
             <div class="flex">
               <button
-                @click="showModalRepas = true"
+                @click="RepasModal(repas.id)"
                 class="bg-green-600 text-white mr-6 px-8 py-2 focus:outline-none poppins rounded-full mt-4 transform transition duration-300 hover:scale-105"
               >
                 Commander
@@ -96,6 +99,22 @@
                   />
                 </svg>
               </button>
+              <button class="ml-4 mt-4" @click="CommentaireModal(repas.id)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-9 h-9"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -107,10 +126,10 @@
     :is-open="showModalRepas"
     @close-modal="showModalRepas = false"
   >
-    <template #header> Ajouter un Repas</template>
+    <template #header> Faire votre commande</template>
 
     <template #body>
-      <form action="#" method="POST" @submit.prevent="commande()">
+      <form action="#" method="POST" @submit.prevent="createTransaction()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
@@ -156,19 +175,72 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter @cancel="showModalRepas = false" @send="commande()" />
+      <AddModalFooter
+        @cancel="showModalRepas = false"
+        @send="createTransaction()"
+      />
+    </template>
+  </TheModal>
+  <TheModal
+    width="w-full md:w-2/3 lg:w-1/2"
+    :is-open="showModalCommentaires"
+    @close-modal="showModalCommentaires = false"
+  >
+    <template #header> Votre commentaire</template>
+
+    <template #body>
+      <form action="#" method="POST" @submit.prevent="commentaire()">
+        <div>
+          <div class="mt-3 sm:mt-0 sm:col-span-2">
+            <div class="px-4 py-5 bg-white p-6">
+              <div class="grid grid-cols-8 gap-6">
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Nom " />
+                  <BaseInput id="nom" class="mt-2" />
+                </div>
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Votre message " />
+                  <div class="mt-1">
+                    <textarea
+                      class="block w-full p-2 border border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                      v-model="sendform.content"
+                      autocomplete="current-password"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </template>
+    <template #footer>
+      <AddModalFooter
+        @cancel="showModalCommentaires = false"
+        @send="commentaire()"
+      />
     </template>
   </TheModal>
 </template>
 
 
   <script>
-
+//import { FedaPay, Transaction } from "fedapay";
+import {
+  openKkiapayWidget,
+  addKkiapayListener,
+  removeKkiapayListener,
+} from "kkiapay";
 import TheModal from "../components/TheModal.vue";
 import BaseLabel from "../components/BaseLabel.vue";
 import BaseInput from "../components/BaseInput.vue";
 import AddModalFooter from "../components/AddModalFooter.vue";
+import AlertComponent from "../components/AlertComponent.vue";
 import axios from "axios";
+import Noty from "noty";
+import "noty/lib/noty.css";
+import "noty/lib/themes/mint.css";
 export default {
   name: "App",
   components: {
@@ -176,6 +248,7 @@ export default {
     BaseLabel,
     BaseInput,
     AddModalFooter,
+    AlertComponent
   },
   data() {
     return {
@@ -197,25 +270,43 @@ export default {
       ],
       currentImage: 0,
       addform: {
-        repas_id: "2dc8695c-5d40-498e-848e-5e737f5bd127",
+        repas_id: "",
         name: "",
         contact: "",
         description: "",
         addrese: "",
         user_id: "",
-        quantite:"",
-        status:"En cours",
-        montant:"1500",
+        quantite: 1,
+        status: "En cours",
+        montant: 0,
+      },
+      sendform: {
+        repas_id: "",
+        content: "",
+      },
+      showAlert: false,
+      alert: {
+        message: "",
       },
       showModalRepas: false,
+      showModalCommentaires: false,
       repass: [],
       restaurants: [],
-    
+      CommentaireId: "",
+      filteredRepas: [],
+      user: {
+        // Assurez-vous d'initialiser l'objet user
+        email: "user@example.com", // Remplacez par l'email de l'utilisateur
+      },
     };
   },
   mounted() {
     this.startSlider();
     this.getRepas();
+     addKkiapayListener('success',this.successHandler)
+  },
+  beforeUnmount() {
+    removeKkiapayListener("success", this.successHandler);
   },
   methods: {
     startSlider() {
@@ -223,15 +314,85 @@ export default {
         this.currentImage = (this.currentImage + 1) % this.images.length;
       }, 5000); // Défilement toutes les 5 secondes
     },
+    CommentaireModal(id) {
+      this.showModalCommentaires = !this.showModalCommentaires;
+      this.sendform.repas_id = id;
+    },
+    RepasModal(id) {
+      this.showModalRepas = !this.showModalRepas;
+      this.addform.repas_id = id;
+      this.filteredRepas = this.repass.filter(
+        (repas) => repas.id === this.addform.repas_id
+      );
+   
+    },
+   
     async commande() {
       try {
+        this.addform.montant = this.filteredRepas[0].prix *this.addform.quantite ;
         const response = await axios.post("/api/commandes", this.addform);
         if (response.status == 201) {
           console.log(response);
           this.showModalRepas = !this.showModalRepas;
+          this.addform ={};
+
+           new Noty({
+           type: 'success',
+           layout: 'topRight',
+           text: 'Votre commande est éffectuée avec succés',
+            timeout: 5000,
+           }).show( );
+        }else {
+          this.showModalRepas = !this.showModalRepas;
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
         }
       } catch (error) {
-        console.log(error);
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+    async commentaire() {
+      try {
+        const response = await axios.post("/api/commentaires", this.sendform);
+        if (response.status == 201) {
+          console.log(response);
+          this.showModalCommentaires = !this.showModalCommentaires;
+          this.sendform = {};
+          new Noty({
+            type: "success",
+            layout: "topRight",
+            text: "Merci pour votre commentaire",
+            timeout: 5000,
+          }).show();
+        }else {
+         this.showModalCommentaires = !this.showModalCommentaires;
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
       }
     },
     async getRepas() {
@@ -245,6 +406,22 @@ export default {
         console.log(error.data);
       }
     },
+   async createTransaction() {
+      this.addform.montant = this.filteredRepas[0].prix *this.addform.quantite ;
+     openKkiapayWidget({
+        amount: this.addform.montant,
+        firstname:this.addform.name,
+        lastname:this.addform.name,
+        api_key: "361197d0e64411ec848227abfc492dc7",
+        sandbox: true,
+        phone: "61000000",
+      });
+    },
+    successHandler(response) {
+      console.log(response);
+      this.commande();
+    },
+
   },
 };
 </script>
