@@ -11,6 +11,7 @@ import Commande from './views/Commande.vue';
 import RestaurantDetail from './views/RestaurantDetail.vue';
 import RestaurantDash from './views/RestaurantDash.vue';
 import CommandeDash from './views/CommandeDash.vue';
+import CommandeDetail from './views/CommandeDetail.vue';
 import CategoryDash from './views/CategoryDash.vue';
 import LivreurDash from './views/LivreurDash.vue';
 import RepasDash from './views/RepasDash.vue';
@@ -58,6 +59,11 @@ const routes = [
   {
     path: "/commandeDash",
     component: CommandeDash,
+    meta: { layout: DashLayout, public: false },
+  },
+  {
+    path: "/commandeDetail/:id",
+    component: CommandeDetail,
     meta: { layout: DashLayout, public: false },
   },
   {

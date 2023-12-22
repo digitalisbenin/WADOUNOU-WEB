@@ -46,8 +46,8 @@ export default {
         const response = await axios.get("/api/roles");
         if (response.data) {
           console.log(response.data);
-          this.role_id = response.data.data[2].id;
-          this.roles_id = response.data.data[1].id;
+          this.role_id = response.data.data[1].id;
+          this.roles_id = response.data.data[2].id;
           console.log(this.role_id);
         }
       } catch (error) {
@@ -176,12 +176,10 @@ export default {
     </form>
     <p class="text-sm text-white">
       Pas encore de compte
-      <a
-        href="/auth/register"
+      <router-link  to="/auth/register"
         class="font-sans text-blue-700 hover:underline dark:text-primary-500"
       >
-        Inscrivez vous ici</a
-      >
+        Inscrivez vous ici</router-link>
     </p>
   </div>
 </template>

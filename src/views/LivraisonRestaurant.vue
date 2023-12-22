@@ -33,7 +33,7 @@
           placeholder="Rechercher ..."
         />
       </div>
-      <div>
+      <div class=" mt-2 ml-4 lg:mt-0 lg:ml-0">
         <button
           class="inline-flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           @click="showModalLivraison = true"
@@ -57,7 +57,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="(livraison, index) in livraisons"
+          v-for="(livraison, index) in filteredLivraisons"
           :key="index"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
@@ -82,7 +82,7 @@
                 >
                 </span>
               </span>
-              {{ livraison.status }}
+              {{ livraison.status }} 
             </span>
             <span
               v-if="livraison.status === 'suspended'"
@@ -367,14 +367,52 @@ export default {
       livraisons: [],
       commandes: [],
       livreurs:[],
-      
+      restaurants: [],
+      filters:"",
     };
   },
   created() {
     this.profile();
     this.getLivraison();
+    this.restaurant();
     this.getCommande();
     this.getLivreur();
+  },
+  computed: {
+
+     filteredRestaurant() {
+      const searchTerm = this.filters.toLowerCase();
+      const filtered_data = this.restaurants.filter((restaurants) => {
+        const name = restaurants.user.id.toLowerCase();
+        return name.includes(searchTerm);
+      });
+
+      return filtered_data;
+    },
+ filteredLivraisons() {
+  // Vérifiez si filteredRestaurant n'est pas vide
+  if (this.filteredRestaurant.length > 0) {
+    // Sélectionnez le premier élément de filteredRestaurant
+    const selectedRestaurant = this.filteredRestaurant[0];
+
+    // Assurez-vous que selectedRestaurant et son id sont définis avant de les utiliser
+    const searchTerm = selectedRestaurant && selectedRestaurant.id ? selectedRestaurant.id.toLowerCase() : '';
+
+    // Filtrez les menus basés sur l'ID du restaurant si celui-ci est défini
+    const filtered_data = this.livraisons.filter((livraisons) => {
+      const restaurantId = livraisons.commande.restaurant && livraisons.commande.restaurant.id ? livraisons.commande.restaurant.id.toLowerCase() : '';
+      return restaurantId.includes(searchTerm);
+    });
+
+    return filtered_data;
+  } else {
+    // Retournez tous les menus si filteredRestaurant est vide
+    return [];
+  }
+},
+
+
+   
   },
   methods: {
     deleteLivraisonModal() {
@@ -385,8 +423,19 @@ export default {
         const response = await axios.get("/api/profile");
         if (response.data) {
           this.user = response.data.id;
+          this.filters= response.data.id;
           console.log(this.user);
-          this.filterRestaurantsByUser(this.user);
+        }
+      } catch (error) {
+        console.log(error.data);
+      }
+    },
+     async restaurant() {
+      try {
+        const response = await axios.get("/api/restaurants");
+        if (response.data) {
+          this.restaurants = response.data.data;
+          console.log(this.restaurants);
         }
       } catch (error) {
         console.log(error.data);

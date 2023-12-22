@@ -33,7 +33,7 @@
           placeholder="Rechercher ..."
         />
       </div>
-      <div>
+      <div class=" mt-2 ml-4 lg:mt-0 lg:ml-0">
         <button
           class="inline-flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           @click="showModalRepas = true"
@@ -389,7 +389,7 @@ export default {
           this.getRepas();
         }
        else {
-          this.showModalRepas =!this.showModalRepas;
+          //this.showModalRepas =!this.showModalRepas;
           this.showAlert = true;
           this.alert.message =
             "Quelque chose c'est mal passé. Merci d'essayer plus tard!";

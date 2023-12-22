@@ -1,8 +1,9 @@
 <template>
-  <div v-show="showAlert">
+  
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white p-4">
+    <div v-show="showAlert">
     <AlertComponent :content="alert.message" type-alert="error" />
   </div>
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white p-4">
     <div class="flex items-center justify-between pb-4">
       <label for="table-search" class="sr-only">Rechercher</label>
       <div class="relative">
@@ -43,7 +44,14 @@
               <div class="w-2/3 mr-9">
                 <BaseLabel value="Nom du restaurant" class="text-left font-bold" />
                 <BaseInput id="nom" v-model="addform.name" class="mt-1" />
-
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Ville" class="text-left mt-2 font-bold" />
+                  <BaseInput
+                    id="prenom"
+                    v-model="addform.ville"
+                    class="mt-1"
+                  />
+                </div>
                 <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Adresse" class="text-left mt-2 font-bold" />
                   <BaseInput
@@ -73,7 +81,7 @@
                   <div class="relative mt-1">
                     <BaseInput
                       v-model="addform.capacite"
-                      placeholder="62333333"
+                      placeholder="100"
                       class="mt-1"
                     />
                   </div>
@@ -86,7 +94,7 @@
                   <div class="relative mt-1">
                     <BaseInput
                       v-model="addform.specilite"
-                      placeholder="62333333"
+                      
                       class="mt-1"
                     />
                   </div>
@@ -187,7 +195,14 @@
               <div class="w-2/3 mr-9">
                 <BaseLabel value="Nom du restaurant" class="text-left font-bold" />
                 <BaseInput id="nom" v-model="livreur.name" class="mt-1" />
-
+                <div class="col-span-8 sm:col-span-8">
+                  <BaseLabel value="Ville" class="text-left mt-2 font-bold" />
+                  <BaseInput
+                    id="prenom"
+                    v-model="livreur.ville"
+                    class="mt-1"
+                  />
+                </div>
                 <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Adresse" class="text-left mt-2 font-bold" />
                   <BaseInput
@@ -249,7 +264,7 @@
                 </div>
               </div>
               <div class="w-1/3 mt-4">
-                <img class="w-full h-full" :src="livreur.image_url" alt="" />
+                <img class="w-full h-96" :src="livreur.image_url" alt="" />
               </div>
             </div>
             <div class="flex">
@@ -610,6 +625,7 @@ export default {
       },
       addform: {
         name: "",
+        ville: "",
         adresse: "",
         phone: "",
         description: "",
@@ -771,8 +787,6 @@ export default {
         const response = await axios.post("/api/restaurants", this.addform);
         if (response.status == 201) {
           console.log(response);
-          this.showModalRestaurant = !this.showModalRestaurant;
-          this.addform = {};
           new Noty({
             type: "success",
             layout: "topRight",
@@ -781,7 +795,6 @@ export default {
           }).show();
           this.restaurant();
         } else {
-          this.showModalRepas = !this.showModalRepas;
           this.showAlert = true;
           this.alert.message =
             "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
@@ -802,10 +815,11 @@ export default {
     },
     async addMenu() {
       try {
+        this.addforms.restaurant_id = this.filteredRestaurant[0].id;
         const response = await axios.post("/api/menus", this.addforms);
         if (response.status == 201) {
           console.log(response);
-          this.showModalRepas = !this.showModalRepas;
+          //this.showModalRepas = !this.showModalRepas;
           this.addforms = {};
           new Noty({
             type: "success",

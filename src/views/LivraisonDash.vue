@@ -48,6 +48,30 @@
             placeholder="Rechercher ..."
           />
         </div>
+        <div class="ml-9 flex">
+      <button
+     
+       class="text-gray-700 bg-blue-500 rounded-lg font-medium px-12 py-1"
+         @click="filter = ''"
+       >
+        Tous
+      </button>
+      <button 
+      @click="filter = 'En cours'"
+      class="text-gray-700 bg-yellow-500 rounded-lg font-medium px-12 py-1 ml-4">
+        En cours
+      </button>
+      <button
+      @click="filter = 'suspended'"
+       class="text-gray-700 bg-green-300 rounded-lg font-medium px-12 py-1 ml-4">
+        suspended
+      </button>
+      <button 
+      @click="filter = 'Terminer'"
+       class="text-gray-700 bg-red-500 rounded-lg font-medium px-12 py-1 ml-4">
+       Terminer
+      </button>
+      </div>
       </div>
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead
@@ -57,8 +81,9 @@
             <th scope="col" class="px-6 py-3">Nom</th>
             <th scope="col" class="px-6 py-3">Address</th>
             <th scope="col" class="px-6 py-3">Phone</th>
-            <th scope="col" class="px-6 py-3">Nom livreur</th>
+            <th scope="col" class="px-6 py-3">Nom restaurant</th>
             <th scope="col" class="px-6 py-3">Status</th>
+            <th scope="col" class="px-6 py-3">Date</th>
             <th scope="col" class="px-6 py-3">Action</th>
           </tr>
         </thead>
@@ -115,7 +140,8 @@
                 {{ livraison.status }}
               </span>
             </td>
-            <td class="flex items-center px-6 py-4 space-x-3">
+            <td class="px-6 py-4">{{ livraison.livreur.name }}</td>
+           <!-- <td class="flex items-center px-6 py-4 space-x-3">
               <label
                 class="flex items-center relative w-max cursor-pointer select-none"
               >
@@ -128,7 +154,53 @@
                   class="w-7 h-7 right-7 absolute rounded-full transform transition-transform bg-gray-200"
                 />
               </label>
-            </td>
+            </td>-->
+            <td 
+             class="flex items-center px-6 py-4 space-x-3">
+            <button
+              class="text-red-500 hover:bg-gray-100 hover:rounded-lg font-medium"
+              @click="deleteCommandeModal()"
+            >
+              <span class="flex items-center p-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-6 h-6 pr-2"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Supprimer
+              </span>
+            </button>
+            <router-link
+            
+              class="text-green-500 hover:bg-gray-100 hover:rounded-lg font-medium"
+              :to="`/commandeDetail/${livraison.commande.id}`"
+            >
+              <span class="flex items-center p-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                  />
+                </svg>
+                Détail
+              </span>
+            </router-link>
+          </td>
           </tr>
         </tbody>
       </table>

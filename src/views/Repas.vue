@@ -1,17 +1,17 @@
 <template>
   <div class="">
     <div class="custom-background h-96"></div>
-     <div v-show="showAlert">
+    <div v-show="showAlert">
       <AlertComponent :content="alert.message" type-alert="error" />
     </div>
     <div class="flex">
-      <div class="w-1/3 mt-4">
+      <div class="lg:w-1/3 mt-4 ml-9 lg:ml-0">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
             <img
               :src="images[currentImage].src"
               :alt="'Image ' + (currentImage + 1)"
-              class="w-2/3 h-72 object-cover ml-16"
+              class="lg:w-2/3 h-72 object-cover mg:ml-16"
             />
             <p class="text-center text-xl font-sans font-bold mt-2">
               {{ images[currentImage].name }}
@@ -20,16 +20,16 @@
         </transition>
       </div>
       <div
-        class="z-0 flex flex-row items-start justify-center w-screen h-screen pt-20 -mb-16 bg-gray-50 lg:bg-white lg:mb-20 lg:w-1/3 lg:h-96 lg:pt-0"
+        class="z-0 flex flex-row hidden md:block items-start justify-center w-screen h-screen pt-20 -mb-16 bg-gray-50 lg:bg-white lg:w-1/3 lg:h-96 lg:pt-0"
       >
         <img
-          class="absolute left-0 lg:left-auto lg:-mt-64"
-          src="../assets/Rectangle_1.png"
+          class="absolute left-72 h-3/4 lg:-mt-32"
+          src="../assets/Smartphonewadounou.png"
           alt=""
         />
-        <img class="ml-64 lg:-mt-16" src="../assets/Rectangle_2.png" alt="" />
+        <img class="ml-52 lg:-mt-24" src="../assets/Smartphone wadounouCopie.png" alt="" />
       </div>
-      <div class="w-1/3 mt-4 ml-4">
+      <div class="w-1/3 mt-16 ml-4 hidden md:block">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
             <img
@@ -59,7 +59,7 @@
       </div>
     </div>
     <div class="flex mt-4 flex-wrap">
-      <div v-for="(repas, index) in repass" :key="index" class="w-1/4 p-4">
+      <div v-for="(repas, index) in repass" :key="index" class="lg:w-1/4 p-4">
         <div
           class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 rounded-lg relative ml-4"
         >
@@ -74,7 +74,7 @@
               {{ repas.description }}
             </p>
             <h2 class="text-gray-900 poppins text-2xl font-bold">
-              {{ repas.prix }}FCFA
+              {{ repas.prix.split(".")[0] }}FCFA
             </h2>
             <div class="flex">
               <button
@@ -129,7 +129,7 @@
     <template #header> Faire votre commande</template>
 
     <template #body>
-      <form action="#" method="POST" @submit.prevent="createTransaction()">
+      <form action="#" method="POST" @submit.prevent="commande()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
@@ -153,7 +153,7 @@
                   </div>
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Description" />
+                  <BaseLabel value="Informations Complémentaires (pas obligatoire)" />
                   <BaseInput
                     id="language"
                     v-model="addform.description"
@@ -175,10 +175,7 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter
-        @cancel="showModalRepas = false"
-        @send="createTransaction()"
-      />
+      <AddModalFooter @cancel="showModalRepas = false" @send="commande()" />
     </template>
   </TheModal>
   <TheModal
@@ -248,7 +245,7 @@ export default {
     BaseLabel,
     BaseInput,
     AddModalFooter,
-    AlertComponent
+    AlertComponent,
   },
   data() {
     return {
@@ -277,8 +274,9 @@ export default {
         addrese: "",
         user_id: "",
         quantite: 1,
-        status: "En cours",
+        status: "En attente",
         montant: 0,
+        commande_id: "",
       },
       sendform: {
         repas_id: "",
@@ -294,6 +292,8 @@ export default {
       restaurants: [],
       CommentaireId: "",
       filteredRepas: [],
+      commandeID: "",
+      transationID: "",
       user: {
         // Assurez-vous d'initialiser l'objet user
         email: "user@example.com", // Remplacez par l'email de l'utilisateur
@@ -303,7 +303,7 @@ export default {
   mounted() {
     this.startSlider();
     this.getRepas();
-     addKkiapayListener('success',this.successHandler)
+    addKkiapayListener("success", this.successHandler);
   },
   beforeUnmount() {
     removeKkiapayListener("success", this.successHandler);
@@ -324,25 +324,87 @@ export default {
       this.filteredRepas = this.repass.filter(
         (repas) => repas.id === this.addform.repas_id
       );
-   
     },
-   
+
     async commande() {
       try {
-        this.addform.montant = this.filteredRepas[0].prix *this.addform.quantite ;
-        const response = await axios.post("/api/commandes", this.addform);
+        this.filters = "";
+        this.addform.montant =
+          this.filteredRepas[0].prix * this.addform.quantite;
+        const data = {
+          name: this.addform.name,
+          description: this.addform.description,
+          contact: this.addform.contact,
+          addrese: this.addform.addrese,
+          montant: this.addform.montant,
+          status: this.addform.status,
+        };
+
+        const response = await axios.post("/api/commandes", data);
         if (response.status == 201) {
           console.log(response);
+          this.commandeID = response.data.data.id;
+          console.log(this.commandeID);
           this.showModalRepas = !this.showModalRepas;
-          this.addform ={};
+          this.lignecommande();
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+    async lignecommande() {
+      try {
+        this.filters = "";
+        this.addform.montant =
+          this.filteredRepas[0].prix * this.addform.quantite;
+        const datas = {
+          quantite: this.addform.quantite,
+          repas_id: this.addform.repas_id,
+          commande_id: this.commandeID,
+          montant: this.addform.montant,
+        };
 
-           new Noty({
-           type: 'success',
-           layout: 'topRight',
-           text: 'Votre commande est éffectuée avec succés',
+        const response = await axios.post("/api/lignecommandes", datas);
+        if (response.status == 201) {
+          console.log(response);
+          this.createTransaction();
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+    async payementmethod() {
+      try {
+        const data = {
+          transationId: this.transationID,
+          commande_id: this.commandeID,
+        };
+
+        const response = await axios.post("/api/payments", data);
+        if (response.status == 201) {
+          console.log(response);
+          this.addform = {};
+          new Noty({
+            type: "success",
+            layout: "topRight",
+            text: "Votre commande a été enregistrée avec succès.",
             timeout: 5000,
-           }).show( );
-        }else {
+          }).show();
+        } else {
           this.showModalRepas = !this.showModalRepas;
           this.showAlert = true;
           this.alert.message =
@@ -375,8 +437,8 @@ export default {
             text: "Merci pour votre commentaire",
             timeout: 5000,
           }).show();
-        }else {
-         this.showModalCommentaires = !this.showModalCommentaires;
+        } else {
+          this.showModalCommentaires = !this.showModalCommentaires;
           this.showAlert = true;
           this.alert.message =
             "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
@@ -406,12 +468,12 @@ export default {
         console.log(error.data);
       }
     },
-   async createTransaction() {
-      this.addform.montant = this.filteredRepas[0].prix *this.addform.quantite ;
-     openKkiapayWidget({
+    async createTransaction() {
+      this.addform.montant = this.filteredRepas[0].prix * this.addform.quantite;
+      openKkiapayWidget({
         amount: this.addform.montant,
-        firstname:this.addform.name,
-        lastname:this.addform.name,
+        firstname: this.addform.name,
+        lastname: this.addform.name,
         api_key: "361197d0e64411ec848227abfc492dc7",
         sandbox: true,
         phone: "61000000",
@@ -419,9 +481,11 @@ export default {
     },
     successHandler(response) {
       console.log(response);
-      this.commande();
-    },
+      this.transationID = response.transactionId;
+      console.log(this.transationID);
 
+      this.payementmethod();
+    },
   },
 };
 </script>

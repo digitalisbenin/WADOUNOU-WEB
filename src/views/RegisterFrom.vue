@@ -67,8 +67,8 @@ export default {
         if (response.data) 
         {
           console.log(response.data);
-          this.role_id = response.data.data[2].id;
-          this.role_ids = response.data.data[1].id;
+          this.role_id = response.data.data[1].id;
+          this.role_ids = response.data.data[2].id;
           console.log(this.role_id);
           console.log(this.role_ids);
         }

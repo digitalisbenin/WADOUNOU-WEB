@@ -7,21 +7,16 @@
       class="custom-background flex flex-col items-center justify-start font-sans min-h-96 lg:pt-10 lg:pb-20"
     >
       <div>
-        <p
-          class="p-2 text-4xl font-bold text-center text-blue-800  lg:text-5xl lg:text-gray-100"
-        >
-          Pourquoi rester affamé quand vous pouvez commander 
+        <p class="p-2 text-4xl font-bold text-center lg:text-5xl text-gray-100">
+          Pourquoi rester affamé quand vous pouvez commander
         </p>
-        <p
-          class="p-2 text-4xl font-bold text-center text-blue-800  lg:text-5xl lg:text-gray-100"
-        >
-         chez WADOUNOU ?
+        <p class="p-2 text-4xl font-bold text-center lg:text-5xl text-gray-100">
+          chez WADOUNOU ?
         </p>
-        
       </div>
       <div>
         <p
-          class="p-4 pt-6 font-sans text-2xl leading-10 text-center text-gray-500 lg:text-gray-200"
+          class="p-4 pt-6 font-sans text-2xl leading-10 text-center text-gray-200"
         >
           Téléchargez dès maintenant l'application WADOUNOU
         </p>
@@ -35,14 +30,14 @@
           Playstore
         </button>
         <button
-          class="pt-3 pb-3 text-2xl font-semibold text-center text-orange-500 transition-all rounded-full shadow-2xl lg:mr-5 hover:text-orange-500 hover:bg-gray-50 pl-11 pr-11 bg-gray-50 focus:outline-none ring-4 ring-orange-500 lg:font-medium lg:text-gray-50 lg:bg-opacity-0 lg:ring-2 lg:ring-white"
+          class="pt-3 pb-3 text-2xl hidden md:block font-semibold text-center text-orange-500 transition-all rounded-full shadow-2xl lg:mr-5 hover:text-orange-500 hover:bg-gray-50 pl-11 pr-11 bg-gray-50 focus:outline-none ring-4 ring-orange-500 lg:font-medium lg:text-gray-50 lg:bg-opacity-0 lg:ring-2 lg:ring-white"
         >
           App Store
         </button>
       </div>
     </div>
     <div class="flex">
-      <div class="w-1/3 mt-4">
+      <div class="lg:w-1/3 lg:mt-4 hidden md:block">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
             <img
@@ -57,22 +52,26 @@
         </transition>
       </div>
       <div
-        class="z-0 flex flex-row items-start justify-center w-screen h-screen pt-20 -mb-16 bg-gray-50 lg:bg-white  lg:w-1/3 lg:h-96 lg:pt-0"
+        class="z-0 flex flex-row hidden md:block items-start justify-center w-screen h-screen pt-20 -mb-16 bg-gray-50 lg:bg-white lg:w-1/3 lg:h-96 lg:pt-0"
       >
         <img
-          class="absolute left-0 lg:left-auto lg:-mt-64"
-          src="../assets/Rectangle_1.png"
+          class="absolute left-72 h-3/4 lg:-mt-32"
+          src="../assets/Smartphonewadounou.png"
           alt=""
         />
-        <img class="ml-64 lg:-mt-16" src="../assets/Rectangle_2.png" alt="" />
+        <img
+          class="ml-52 lg:-mt-24"
+          src="../assets/Smartphone wadounouCopie.png"
+          alt=""
+        />
       </div>
-      <div class="w-1/3 mt-4 ml-4">
+      <div class="lg:w-1/3 mt-4 lg:ml-4 ml-9">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
             <img
               :src="image[currentImage].src"
               :alt="'Image ' + (currentImage + 1)"
-              class="w-2/3 ml-16 h-72 object-cover"
+              class="lg:w-2/3 lg:ml-16 h-72 object-cover"
             />
             <p class="text-center text-xl font-sans font-bold mt-2">
               {{ image[currentImage].name }}
@@ -81,7 +80,7 @@
         </transition>
       </div>
     </div>
-      <label for="restaurant" class="mb-3 block text-2xl font-bold mt-9">
+    <label for="restaurant" class="mb-3 block text-2xl font-bold mt-16">
       Recherchez un restaurant
     </label>
     <div
@@ -90,7 +89,7 @@
       <input
         type="text"
         v-model="filter"
-        class="rounded-full px-4 focus:outline-none w-full"
+        class="rounded-full px-4 focus:outline-none lg:w-full"
         placeholder="Recherche ......."
       />
       <button
@@ -99,142 +98,92 @@
         Search
       </button>
     </div>
-    <div class="relative overflow-hidden h-96 stop-scroll mt-2">
+    <div class="relative overflow-hidden lg:h-96 stop-scroll mt-2">
       <div
-        class="flex transition-transform duration-500 ease-in-out -ml-64 mt-4 hover:scale-105 slider-item"
+        ref="slider"
+        class="flex transition-transform duration-500 ease-in-out lg:ml-9 lg:mr-44 ml-16 mr-80 mt-4 hover:scale-105 slider-item"
       >
-        <!-- Première diapositive -->
-        <div class="flex-shrink-0 w-1/4 ml-32">
+        <!-- Diapositives ici -->
+        <div
+          v-for="(slide, index) in filteredRestau"
+          :key="index"
+          :class="{
+            'flex-shrink-0 lg:w-1/3 lg:ml-9 ':
+              index >= currentIndex && index < currentIndex + 3,
+            hidden: index < currentIndex || index >= currentIndex + 3,
+          }"
+        >
           <div
-            class="flex bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl shadow-xl"
+            class="flex bg-white transform transition duration-700 hover:scale-105 lg:p-6 rounded-2xl shadow-xl w-2/3 lg:w-full"
           >
-            <div class="overflow-hidden rounded-2xl flex flex-grow w-2/3">
+            <div
+              class="overflow-hidden rounded-2xl flex flex-grow lg:w-2/3 w-2/4"
+            >
               <img
-                class="transform transition duration-700 hover:scale-125 h-72 w-full"
-                src="../assets/architecture-building-city-2047397.png"
-                alt="Image 1"
+                class="transition-transform duration-700 hover:scale-125 lg:h-72 lg:w-full h-64 w-80"
+                :src="slide.image_url"
+                :alt="slide.name"
               />
             </div>
-            <div class="flex mt-6 ml-4 space-x-3 w-1/3">
+            <div class="lg:mt-6 lg:ml-4 space-x-3 lg:w-1/3 w-2/4 mt-4">
               <div class="flex flex-col space-y-3">
-                <h1 class="text-2xl text-gray-800 poppins">
-                  Boca Del Rio, Grand Popo
+                <h1 class="lg:text-2xl text-gray-800 poppins text-sm">
+                  {{ slide.name }}
                 </h1>
-                <p class="text-sm text-gray-500 poppins">
-                  Vous sortez à Bénin,
-                </p>
+                <!-- <p class="text-sm text-gray-500 poppins">{{ slide.description }}</p>-->
                 <router-link
-                  class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
+                  class="bg-green-600 text-white lg:px-4 lg:py-2 px-2 focus:outline-none poppins rounded-full lg:mt-24 mr-9 ml-4 lg:mr-0 lg:ml-0 transition-transform duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
                   active-class="text-green-600"
-                  to="/restaurantdetail"
-                  >Plus Info</router-link
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Deuxième diapositive -->
-        <div class="flex-shrink-0 w-1/4 ml-32">
-          <div
-            class="flex bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl shadow-xl"
-          >
-            <div class="overflow-hidden rounded-2xl flex flex-grow w-2/3">
-              <img
-                class="transform transition duration-700 hover:scale-125 h-72 w-full"
-                src="../assets/adult-blur-blurred-background-687824.png"
-                alt="{title}"
-              />
-            </div>
-
-            <div class="flex mt-6 ml-4 space-x-3 w-1/3">
-              <div class="flex flex-col space-y-3">
-                <h1 class="text-2xl text-gray-800 poppins">
-                  Bon goût à Calavi IITA
-                </h1>
-                <p class="text-sm text-gray-500 poppins">
-                  L’igname pilée est une spécialité du nord du Bénin qui est
-                  devenue
-                </p>
-                <router-link
-                  class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
-                  active-class="text-green-600"
-                  to="/restaurantdetail"
-                  >Plus Info</router-link
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Troisième diapositive -->
-        <div class="flex-shrink-0 w-1/4 ml-32">
-          <div
-            class="flex bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl shadow-xl"
-          >
-            <div class="overflow-hidden rounded-2xl flex flex-grow w-2/3">
-              <img
-                class="transform transition duration-700 hover:scale-125 h-72 w-full"
-                src="../assets/architecture-building-city-2047397.png"
-                alt="{title}"
-              />
-            </div>
-
-            <div class="flex mt-6 ml-4 space-x-3 w-1/3">
-              <div class="flex flex-col space-y-3">
-                <h1 class="text-2xl text-gray-800 poppins">
-                  Boca Del Rio, Grand Popo
-                </h1>
-                <p class="text-sm text-gray-500 poppins">
-                  Vous sortez à Bénin,
-                </p>
-                <router-link
-                  class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
-                  active-class="text-green-600"
-                  to="/restaurantdetail"
-                  >Plus Info</router-link
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quatrième diapositive -->
-        <div class="flex-shrink-0 w-1/4 ml-32">
-          <div
-            class="flex bg-white transform transition duration-700 hover:scale-105 p-6 rounded-2xl shadow-xl"
-          >
-            <div class="overflow-hidden rounded-2xl flex flex-grow w-2/3">
-              <img
-                class="transform transition duration-700 hover:scale-125 h-72 w-full"
-                src="../assets/people-2576336_960_720.jpg"
-                alt="{title}"
-              />
-            </div>
-
-            <div class="flex mt-6 ml-4 space-x-3 w-1/3">
-              <div class="flex flex-col space-y-3">
-                <h1 class="text-2xl text-gray-800 poppins">
-                  Wasabi Sushi Bar, Cotonou
-                </h1>
-                <p class="text-sm text-gray-500 poppins">
-                  Nous y avons été avec mon mari
-                </p>
-                <router-link
-                  class="bg-green-600 text-white px-4 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105 text-slate-950 hover:text-gray-300"
-                  active-class="text-green-600"
-                  to="/restaurantdetail"
-                  >Plus Info</router-link
+                  :to="`/restaurantdetail/${slide.id}`"
+                  >Voir plus</router-link
                 >
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div
+        @click="prevSlide"
+        class="absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-9 h-9"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15.75 19.5L8.25 12l7.5-7.5"
+          />
+        </svg>
+      </div>
+      <div
+        @click="nextSlide"
+        class="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-9 h-9"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M8.25 4.5l7.5 7.5-7.5 7.5"
+          />
+        </svg>
+      </div>
     </div>
 
     <h1 class="text-4xl font-bold">Repas</h1>
-       <label for="restaurant" class="mb-3 block text-2xl font-bold mt-9">
+    <label for="restaurant" class="mb-3 block text-2xl font-bold mt-9">
       Recherchez un repas
     </label>
     <div
@@ -243,7 +192,7 @@
       <input
         type="text"
         v-model="filters"
-        class="rounded-full px-4 focus:outline-none w-full"
+        class="rounded-full px-4 focus:outline-none lg:w-full"
         placeholder="Recherche ......."
       />
       <button
@@ -253,7 +202,11 @@
       </button>
     </div>
     <div class="flex mt-6 flex-wrap">
-      <div v-for="(repas, index) in filteredRepa" :key="index" class="w-1/4 p-4">
+      <div
+        v-for="(repas, index) in paginatedCards"
+        :key="index"
+        class="lg:w-1/4 p-4"
+      >
         <div
           class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 rounded-lg relative ml-4"
         >
@@ -268,7 +221,7 @@
               {{ repas.description }}
             </p>
             <h2 class="text-gray-900 poppins text-2xl font-bold">
-              {{ repas.prix }}FCFA
+              {{ repas.prix.split(".")[0] }}FCFA
             </h2>
             <div class="flex">
               <button
@@ -314,13 +267,46 @@
         </div>
       </div>
     </div>
+    <div class="flex justify-center mt-4">
+    <nav aria-label="Page navigation example">
+      <ul class="flex items-center -space-x-px h-8 text-sm">
+        <li>
+          <a @click.prevent="goToPage(currentPage - 1)" :class="{'opacity-50 cursor-not-allowed': currentPage === 1}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            <span class="sr-only">Previous</span>
+            <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+            </svg>
+          </a>
+        </li>
+        <li v-for="page in pages" :key="page">
+          <a @click.prevent="goToPage(page)" 
+            :class="{
+              'z-10 flex items-center justify-center px-3 h-8 leading-tight': true,
+              'text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white': currentPage === page,
+              'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white': currentPage !== page
+            }">
+            {{ page }}
+          </a>
+        </li>
+        
+        <li>
+          <a @click.prevent="goToPage(currentPage + 1)" :class="{'opacity-50 cursor-not-allowed': currentPage === totalPages}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            <span class="sr-only">Next</span>
+            <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
     <section class="pt-4 pb-12 bg-gray-800 mt-6">
       <div class="my-16 text-center">
         <h2
           class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500"
         >
-          Temoignages
+          Quelques temoignages
         </h2>
         <p class="text-xl text-white">
           L'entreprise elle-même est une entreprise très prospère. lâche sage
@@ -335,19 +321,21 @@
             />
           </div>
           <div>
-            <h2 class="text-3xl font-semibold text-gray-800">Food</h2>
+            <h2 class="text-3xl font-semibold text-gray-800">
+              Groupe Tournier
+            </h2>
             <p class="mt-2 text-gray-600">
-              L'entreprise elle-même est une entreprise très prospère. Lequel
-              ces chagrins les abandonnent, et l'erreur née du chagrin, les
-              choses que je déteste car il cherche ici par commodité, il
-              s'engage à être moins épargné par la vérité résultat!
+              Nous apprécions tout particulièrement la facilité d'utilisation du
+              logiciels WADOUNOU tant au niveau du paramétrage que dans leur
+              utilisation quotidienne par nos équipes permettant une prise en
+              main rapide et efficace.
             </p>
           </div>
           <div class="flex justify-end mt-4">
             <a href="#" class="text-xl font-medium text-green-500">John Doe</a>
           </div>
         </div>
-        <div class="max-w-md p-4 bg-white rounded-lg shadow-lg">
+        <div class="max-w-md p-4 bg-white rounded-lg shadow-lg mt-12 lg:mt-0">
           <div class="flex justify-center -mt-16 md:justify-end">
             <img
               class="object-cover w-20 h-20 border-2 border-green-500 rounded-full"
@@ -355,19 +343,20 @@
             />
           </div>
           <div>
-            <h2 class="text-3xl font-semibold text-gray-800">Food</h2>
+            <h2 class="text-3xl font-semibold text-gray-800">Services</h2>
             <p class="mt-2 text-gray-600">
-              L'entreprise elle-même est une entreprise très prospère. Lequel
-              ces chagrins les abandonnent, et l'erreur née du chagrin, les
-              choses que je déteste car il cherche ici par commodité, il
-              s'engage à être moins épargné par la vérité résultat!
+              L'interface utilisateur est incroyablement conviviale, ce qui
+              facilite la navigation et la recherche de mes plats préférés. Le
+              choix de restaurants est vaste, offrant une variété de cuisines
+              pour satisfaire tous les goûts. Je suis constamment impressionné
+              par la rapidité avec laquelle je peux passer ma commande
             </p>
           </div>
           <div class="flex justify-end mt-4">
             <a href="#" class="text-xl font-medium text-green-500">John Doe</a>
           </div>
         </div>
-        <div class="max-w-md p-4 bg-white rounded-lg shadow-lg">
+        <div class="max-w-md p-4 bg-white rounded-lg shadow-lg mt-12 lg:mt-0">
           <div class="flex justify-center -mt-16 md:justify-end">
             <img
               class="object-cover w-20 h-20 border-2 border-green-500 rounded-full"
@@ -375,12 +364,12 @@
             />
           </div>
           <div>
-            <h2 class="text-3xl font-semibold text-gray-800">Food</h2>
+            <h2 class="text-3xl font-semibold text-gray-800">Application</h2>
             <p class="mt-2 text-gray-600">
-              L'entreprise elle-même est une entreprise très prospère. Lequel
-              ces chagrins les abandonnent, et l'erreur née du chagrin, les
-              choses que je déteste car il cherche ici par commodité, il
-              s'engage à être moins épargné par la vérité résultat!
+              J'utilise WADOUNOU depuis quelques mois maintenant, et cela a
+              vraiment transformé la façon dont je commande de la nourriture.
+              C'est de loin la meilleure application de livraison que j'ai
+              essayée.
             </p>
           </div>
           <div class="flex justify-end mt-4">
@@ -393,14 +382,14 @@
   <!-- Composant de modal -->
   <ModalComponent :isOpen="isModalOpen" @close="closeModal" />
   <TheModal
-    width="w-full md:w-2/3 lg:w-1/2"
+    width="w-3/4 md:w-2/3 lg:w-1/2"
     :is-open="showModalRepas"
     @close-modal="showModalRepas = false"
   >
     <template #header> Faire votre commande</template>
 
     <template #body>
-      <form action="#" method="POST" @submit.prevent="createTransaction()">
+      <form action="#" method="POST" @submit.prevent="commande()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
@@ -424,7 +413,7 @@
                   </div>
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Description" />
+                  <BaseLabel value="Informations Complémentaires (pas obligatoire)" />
                   <BaseInput
                     id="language"
                     v-model="addform.description"
@@ -446,11 +435,11 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter @cancel="showModalRepas = false" @send="createTransaction()" />
+      <AddModalFooter @cancel="showModalRepas = false" @send="commande()" />
     </template>
   </TheModal>
   <TheModal
-    width="w-full md:w-2/3 lg:w-1/2"
+    width="w-2/3 md:w-2/3 lg:w-1/2"
     :is-open="showModalCommentaires"
     @close-modal="showModalCommentaires = false"
   >
@@ -460,7 +449,7 @@
       <form action="#" method="POST" @submit.prevent="commentaire()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
-            <div class="px-4 py-5 bg-white p-6">
+            <div class="lg:px-4 py-5 bg-white lg:p-6 px-2">
               <div class="grid grid-cols-8 gap-6">
                 <div class="col-span-8 sm:col-span-8">
                   <BaseLabel value="Nom " />
@@ -470,7 +459,7 @@
                   <BaseLabel value="Votre message " />
                   <div class="mt-1">
                     <textarea
-                      class="block w-full p-2 border border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
+                      class="block lg:w-full p-2 border border-input-disable rounded-md focus:outline-none focus:ring-primary-normal focus:ring focus:ring-opacity-50 shadow-sm focus:border"
                       v-model="sendform.content"
                       autocomplete="current-password"
                       required
@@ -537,7 +526,9 @@ export default {
         { src: require("@/assets/lunch6.png"), name: "Déjeuner Sud" },
         { src: require("@/assets/dinner2.png"), name: "Déjeuner Nord" },
       ],
+
       currentImage: 0,
+      currentIndex: 0,
       showAlert: false,
       alert: {
         message: "",
@@ -548,11 +539,12 @@ export default {
         name: "",
         contact: "",
         description: "",
-        addrese: "",
+        adresse: "",
         user_id: "",
         quantite: 1,
-        status: "En cours",
+        status: "En attente",
         montant: 0,
+        commande_id: "",
       },
       sendform: {
         repas_id: "",
@@ -565,12 +557,17 @@ export default {
       CommentaireId: "",
       filteredRepas: [],
       pris: 0,
-      filters:"",
-      filter:"",
+      filters: "",
+      filter: "",
+      commandeID: "",
+      transationID: "",
+      currentPage: 1,
+      itemsPerPage: 16,
+      totalPages: 5,
     };
   },
   computed: {
-      filteredRestaurant() {
+    filteredRestaurant() {
       const searchTerm = this.filter.toLowerCase();
       const filtered_data = this.restaurants.filter((restaurants) => {
         const name = restaurants.user.id.toLowerCase();
@@ -579,7 +576,17 @@ export default {
 
       return filtered_data;
     },
-   filteredRepa() {
+    filteredRestau() {
+      const searchTerm = this.filter.toLowerCase();
+      const filtered_data = this.restaurants.filter((restaurants) => {
+        const name = restaurants.name.toLowerCase();
+        const adresse = restaurants.adresse.toLowerCase();
+        return name.includes(searchTerm) || adresse.includes(searchTerm);
+      });
+
+      return filtered_data;
+    },
+    filteredRepa() {
       const searchTerm = this.filters.toLowerCase();
       const filtered_data = this.repass.filter((repass) => {
         const name = repass.name.toLowerCase();
@@ -588,14 +595,42 @@ export default {
 
       return filtered_data;
     },
+    // Calcule les cartes à afficher en fonction de la page actuelle
+    // paginatedCards() {
+    //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    //   const endIndex = startIndex + this.itemsPerPage;
+    //   return this.cards.slice(startIndex, endIndex);
+    // },
+    paginatedCards() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
 
-   
+      // Vérifier si la page actuelle est valide
+      if (startIndex >= this.filteredRepa.length || endIndex <= 0) {
+        return []; // Retourner un tableau vide si la page est invalide
+      }
+
+      return this.filteredRepa.slice(startIndex, endIndex);
+    },
+    // Vérifie si le bouton "Charger plus" doit être affiché
+    showLoadMoreButton() {
+      return this.currentPage * this.itemsPerPage < this.filteredRepa.length;
+    },
+    // pages() {
+
+    //   return Array.from({ length: this.totalPages }, (_, index) => index + 1);
+    // },
+    pages() {
+      const totalCards = this.filteredRepa.length;
+      const totalPages = Math.ceil(totalCards / this.itemsPerPage);
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    },
   },
   mounted() {
     this.startSlider();
     this.getRepas();
     this.restaurant();
-     addKkiapayListener('success',this.successHandler)
+    addKkiapayListener("success", this.successHandler);
   },
   beforeUnmount() {
     removeKkiapayListener("success", this.successHandler);
@@ -628,18 +663,80 @@ export default {
 
     async commande() {
       try {
-         this.filters= "";
+        this.filters = "";
         this.addform.montant =
           this.filteredRepas[0].prix * this.addform.quantite;
-        const response = await axios.post("/api/commandes", this.addform);
+        const data = {
+          name: this.addform.name,
+          description: this.addform.description,
+          contact: this.addform.contact,
+          addrese: this.addform.adresse,
+          montant: this.addform.montant,
+          status: this.addform.status,
+        };
+
+        const response = await axios.post("/api/commandes", data);
         if (response.status == 201) {
           console.log(response);
+          this.commandeID = response.data.data.id;
+          console.log(this.commandeID);
           this.showModalRepas = !this.showModalRepas;
+          this.lignecommande();
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+    async lignecommande() {
+      try {
+        this.filters = "";
+        this.addform.montant =
+          this.filteredRepas[0].prix * this.addform.quantite;
+        const datas = {
+          quantite: this.addform.quantite,
+          repas_id: this.addform.repas_id,
+          commande_id: this.commandeID,
+          montant: this.addform.montant,
+        };
+
+        const response = await axios.post("/api/lignecommandes", datas);
+        if (response.status == 201) {
+          console.log(response);
+          this.createTransaction();
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+    async payementmethod() {
+      try {
+        const data = {
+          transationId: this.transationID,
+          commande_id: this.commandeID,
+        };
+
+        const response = await axios.post("/api/payments", data);
+        if (response.status == 201) {
+          console.log(response);
           this.addform = {};
           new Noty({
             type: "success",
             layout: "topRight",
-            text: "Votre commande est éffectuée avec succés",
+            text: "Votre commande a été enregistrée avec succès.",
             timeout: 5000,
           }).show();
         } else {
@@ -706,6 +803,7 @@ export default {
         console.log(error.data);
       }
     },
+
     async restaurant() {
       try {
         const response = await axios.get("/api/restaurants");
@@ -721,12 +819,12 @@ export default {
         console.log(error.data);
       }
     },
-     async createTransaction() {
-      this.addform.montant = this.filteredRepas[0].prix *this.addform.quantite ;
-     openKkiapayWidget({
+    async createTransaction() {
+      this.addform.montant = this.filteredRepas[0].prix * this.addform.quantite;
+      openKkiapayWidget({
         amount: this.addform.montant,
-        firstname:this.addform.name,
-        lastname:this.addform.name,
+        firstname: this.addform.name,
+        lastname: this.addform.name,
         api_key: "361197d0e64411ec848227abfc492dc7",
         sandbox: true,
         phone: "61000000",
@@ -734,7 +832,44 @@ export default {
     },
     successHandler(response) {
       console.log(response);
-      this.commande();
+      this.transationID = response.transactionId;
+      console.log(this.transationID);
+
+      this.payementmethod();
+    },
+    nextSlide() {
+      if (this.currentIndex + 3 < this.slides.length) {
+        this.currentIndex += 1;
+        this.updateSlider();
+      }
+    },
+    prevSlide() {
+      if (this.currentIndex > 0) {
+        this.currentIndex -= 1;
+        this.updateSlider();
+      }
+    },
+    updateSlider() {
+      const translateValue = -this.currentIndex * (100 / 3) + "%";
+      this.$refs.slider.style.transform = "translateX(" + translateValue + ")";
+    },
+    goToPage(page) {
+      // if (page >= 1 && page <= this.pages) {
+      //   this.currentPage = page;
+      // }
+      this.currentPage = page;
+      
+    },
+    loadMore() {
+      // Ajoutez ici la logique pour charger plus d'éléments depuis votre source de données (définie localement)
+      // Assurez-vous d'ajuster cette logique en fonction de votre situation réelle
+      try {
+        const newCards = this.getMoreCards(); // Remplacez par votre logique pour récupérer plus de cartes localement
+        this.cards = this.cards.concat(newCards);
+        this.currentPage++;
+      } catch (error) {
+        console.error('Erreur lors du chargement des données supplémentaires', error);
+      }
     },
   },
 };
@@ -761,15 +896,6 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
-}
-
-.slider-item {
-  animation: slide 25s linear infinite;
-}
-.stop-scroll,
-.stop-scroll *:hover {
-  transition: none !important;
-  animation: none !important;
 }
 
 @keyframes slide {

@@ -1,31 +1,37 @@
 <template>
-  <nav class="bg-slate-50 p-4">
-    <div class="container mx-auto flex justify-between items-center">
-      <!-- Logo -->
-      <div>
-        <img src="../assets/WADOUNOU.png" alt="Logo" class="h-12 w-auto" />
+  <nav
+    class="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center"
+  >
+    <div class="flex items-center justify-between">
+      <div class="mb-4 md:mb-0">
+        <img src="../assets/WADOUNOU.png" alt="Logo" class="h-16 w-auto" />
       </div>
-
-      <!-- Barre de recherche -->
-      <!-- <div
-        class="rounded-full p-1 box-border border border-orange-500 bg-white overflow-hidden ring-red-300 focus:ring-4 w-96 flex items-center py-1"
-      >
-        <input
-          type="text"
-          class="rounded-full px-4 focus:outline-none w-full"
-          placeholder="Recherche ......."
-        />
+      <!-- Mobile menu button -->
+      <div @click="isOpen = !isOpen" class="flex md:hidden">
         <button
-          class="text-sm bg-green-600 py-2 px-6 rounded-full text-white poppins ring-red-300 focus:ring-4 transition duration-300 hover:scale-105 transform"
+          type="button"
+          class="text-gray-800 hover:text-gray-400 focus:outline-none focus:text-gray-400"
+          aria-label="toggle menu"
         >
-          Search
+          <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current">
+            <path
+              fill-rule="evenodd"
+              d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
+            ></path>
+          </svg>
         </button>
-      </div> -->
-      <!-- Menu -->
-      <ul class="flex space-x-4 text-xl font-bold">
+      </div>
+    </div>
+
+    <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
+    <div
+      :class="isOpen ? 'flex' : 'hidden'"
+      class="flex-col mt-8 space-y-4 md:flex md:space-y-0 md:flex-row md:items-center md:space-x-10 md:mt-0"
+    >
+      <ul class="lg:flex space-x-4 text-2xl font-bold">
         <li>
           <router-link
-            class="text-slate-950 hover:text-gray-300"
+            class="text-slate-950 hover:text-gray-500"
             active-class="text-green-600"
             to="/"
             >Acceuil</router-link
@@ -33,7 +39,7 @@
         </li>
         <li>
           <router-link
-            class="text-slate-950 hover:text-gray-300"
+            class="text-slate-950 hover:text-gray-500"
             active-class="text-green-600"
             to="/commande"
             >Commande</router-link
@@ -41,7 +47,7 @@
         </li>
         <li>
           <router-link
-            class="text-slate-950 hover:text-gray-300"
+            class="text-slate-950 hover:text-gray-500"
             active-class="text-green-600"
             to="/reservation"
             >Reservation</router-link
@@ -49,15 +55,15 @@
         </li>
         <li>
           <router-link
-            class="text-slate-950 hover:text-gray-300"
+            class="text-slate-950 hover:text-gray-500"
             active-class="text-green-600"
             to="/restaurant"
-            >Restaurant</router-link
+            >Restaurants</router-link
           >
         </li>
         <li>
           <router-link
-            class="text-slate-950 hover:text-gray-300"
+            class="text-slate-950 hover:text-gray-500"
             active-class="text-green-600"
             to="/repas"
             >Repas</router-link
@@ -65,21 +71,23 @@
         </li>
         <li>
           <router-link
-            class="text-slate-950 hover:text-gray-300"
+            class="text-slate-950 hover:text-gray-500"
             active-class="text-green-600"
             to="/propos"
             >A propos</router-link
           >
         </li>
       </ul>
-      <div v-if="this.user === ''">
-        <div class="flex items-center justify-end space-x-6 text-xl font-bold">
-          <router-link
-            class="bg-green-600 px-6 py-3 text-white poppins rounded-full ring-red-300 focus:outline-none focus:ring-4 transform transition duration-700 hover:scale-105"
-            to="/auth/login"
-            >Se connecter</router-link
-          >
-        </div>
+      <div
+        v-if="this.user === ''"
+        class="flex items-center lg:justify-end space-x-6 text-xl font-bold ml-16 lg:ml-0"
+      >
+        <router-link
+          class="bg-green-600 px-6 py-3 text-white poppins rounded-full ring-red-300 focus:outline-none focus:ring-4 transform transition duration-700 hover:scale-105"
+          to="/auth/login"
+        >
+          Se connecter
+        </router-link>
       </div>
       <div v-else>
         <div class="relative" @click="toggleDropdown">
@@ -133,8 +141,9 @@
               role="menuitem"
               tabindex="-1"
               id="user-menu-item-2"
-              >Déconnexion</button
             >
+              Déconnexion
+            </button>
           </div>
         </div>
       </div>
@@ -142,6 +151,7 @@
   </nav>
 </template>
   
+
   <script>
 import axios from "axios";
 import TokenService from "../services/storage.service";
@@ -152,6 +162,8 @@ export default {
       user: "",
       name: "",
       isDropdownOpen: false,
+      isOpen: false,
+      isconnetid:false,
     };
   },
   created() {
@@ -166,7 +178,7 @@ export default {
         const response = await axios.get("/api/logout");
         if (response.status === 204) {
           TokenService.removeToken();
-          this.$router.push("/auth/login");
+          this.$router.push("/");
         }
       } catch (error) {
         console.log(error);

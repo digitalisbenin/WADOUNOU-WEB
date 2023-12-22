@@ -321,7 +321,7 @@ export default {
     return filtered_data;
   } else {
     // Retournez tous les menus si filteredRestaurant est vide
-    return this.reservations;
+    return [];
   }
 },
 

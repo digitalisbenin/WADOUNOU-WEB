@@ -4,6 +4,9 @@ import router from './router';
 import "./index.css";
 import store from "./store";
 import Pusher from "pusher-js";
+//import 'alpinejs';
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 import Echo from "laravel-echo";
 import ApiService from "./services/api.service";
 import TokenService from "./services/storage.service";
@@ -27,5 +30,6 @@ window.Echo = new Echo({
 
 createApp(App)
 .use(store)
+.component("v-select", vSelect)
 .use(router)
 .mount('#app')

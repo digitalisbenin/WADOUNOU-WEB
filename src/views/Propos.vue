@@ -245,7 +245,7 @@ export default {
   
 <style scoped>
 .custom-background {
-  background-image: url("~@/assets/IMG_CommandeLigne(1)_large.png");
+  /*background-image: url("~@/assets/IMG_CommandeLigne(1)_large.png");*/
   /* Remplacez 'votre-image.jpg' par le nom de votre image */
   background-size: cover;
   /* Ajustez la taille de l'image */

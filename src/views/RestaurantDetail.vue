@@ -1,11 +1,17 @@
 <template>
   <div class="">
-    <div class="custom-background h-96"></div>
+    <div class="">
+      <img
+                class=" w-full"
+                src="../assets/ENsavoirplusrestau.jpg"
+                alt="Image 2"
+              />
+    </div>
     <div v-show="showAlert">
       <AlertComponent :content="alert.message" type-alert="error" />
     </div>
     <div class="flex">
-      <div class="w-1/3 mt-4">
+      <div class="lg:w-1/3 mt-4">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
             <img
@@ -20,16 +26,16 @@
         </transition>
       </div>
       <div
-        class="z-0 flex flex-row items-start justify-center w-screen h-screen pt-20 -mb-16 bg-gray-50 lg:bg-white lg:mb-20 lg:w-1/3 lg:h-96 lg:pt-0"
+        class="z-0 flex flex-row hidden md:block items-start justify-center w-screen h-screen pt-20 -mb-16 bg-gray-50 lg:bg-white lg:w-1/3 lg:h-96 lg:pt-0"
       >
         <img
-          class="absolute left-0 lg:left-auto lg:-mt-64"
-          src="../assets/Rectangle_1.png"
+          class="absolute left-72 h-3/4 lg:-mt-32"
+          src="../assets/Smartphonewadounou.png"
           alt=""
         />
-        <img class="ml-64 lg:-mt-16" src="../assets/Rectangle_2.png" alt="" />
+        <img class="ml-52 lg:-mt-24" src="../assets/Smartphone wadounouCopie.png" alt="" />
       </div>
-      <div class="w-1/3 mt-4 ml-4">
+      <div class="w-1/3 hidden md:block mt-24 ml-4">
         <transition name="fade" mode="out-in">
           <div :key="currentImage">
             <img
@@ -62,16 +68,16 @@
       <div
         v-for="(restaurant, index) in filteredRestaurants"
         :key="index"
-        class="flex ml-80 shadow-xl mr-80 h-80"
+        class="flex lg:ml-80 shadow-xl lg:mr-80 h-80"
       >
         <img
-          class="transform transition duration-700 hover:scale-125 h-72 ml-24 mt-2"
+          class="transform transition duration-700 hover:scale-125 h-72 lg:ml-24 mt-2 w-1/2"
           :src="restaurant.image_url"
           alt="{title}"
         />
-        <div class="ml-12 mt-6 text-left">
+        <div class="lg:ml-12 mt-6 text-left ml-9">
           <h2 class="text-2xl font-semibold mb-2">{{ restaurant.name }}</h2>
-          <p class="text-gray-600 text-sm mb-2 mt-2 mr-2">
+          <p class="text-gray-600 text-sm mb-2 mt-2 mr-2 hidden md:block">
             {{ restaurant.description }}
           </p>
           <p class="text-gray-600 text-sm mb-2">
@@ -94,13 +100,13 @@
         </div>
       </div>
       <h3 class="text-2xl font-semibold mt-9">Nos menus</h3>
-      <div class="flex mt-4 flex-wrap p-12">
-      <div v-for="(repas, index) in filteredMenus" :key="index" class="w-1/4 p-4">
+      <div class="flex mt-4 flex-wrap lg:p-12">
+      <div v-for="(repas, index) in filteredMenus" :key="index" class="lg:w-1/4 p-4">
         <div
-          class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 rounded-lg relative ml-4"
+          class="bg-white border border-gray-100 transition transform duration-700 hover:shadow-xl hover:scale-105 rounded-lg relative lg:ml-4"
         >
           <img
-            class="h-60 w-72 mx-auto transform transition duration-300 hover:scale-105"
+            class="h-60 lg;w-72 lg:mx-auto transform transition duration-300 hover:scale-105"
             :src="repas.repas.image_url"
             alt=""
           />
@@ -110,7 +116,7 @@
               {{ repas.description }}
             </p>
             <h2 class="text-gray-900 poppins text-2xl font-bold">
-              {{ repas.prix }}FCFA
+              {{ repas.prix.split('.')[0]  }}FCFA
             </h2>
              <div class="flex">
               <button
@@ -187,7 +193,7 @@
                   </div>
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Description" />
+                  <BaseLabel value="Informations Complémentaires" />
                   <BaseInput
                     id="language"
                     v-model="addform.description"
@@ -230,7 +236,7 @@
     <template #header> Faire votre commande</template>
 
     <template #body>
-      <form action="#" method="POST" @submit.prevent="createTransaction()">
+      <form action="#" method="POST" @submit.prevent="commande()">
         <div>
           <div class="mt-3 sm:mt-0 sm:col-span-2">
             <div class="px-4 py-5 bg-white p-6">
@@ -254,7 +260,7 @@
                   </div>
                 </div>
                 <div class="col-span-8 sm:col-span-8">
-                  <BaseLabel value="Description" />
+                  <BaseLabel value="Informations Complémentaires (pas obligatoire)" />
                   <BaseInput
                     id="language"
                     v-model="addforms.description"
@@ -276,7 +282,7 @@
       </form>
     </template>
     <template #footer>
-      <AddModalFooter @cancel="showModalRepas = false" @send="createTransaction()" />
+      <AddModalFooter @cancel="showModalRepas = false" @send="commande()" />
     </template>
   </TheModal>
   <TheModal
@@ -380,8 +386,8 @@ export default {
         description: "",
         addrese: "",
         user_id: "",
-        quantite: 0,
-        status: "En cours",
+        quantite: 1,
+        status: "En attente",
         montant: 0,
       },
       sendform:{
@@ -398,6 +404,8 @@ export default {
       filteredMenus:[],
       showModalCommentaires: false,
       showAlert: false,
+      commandeID:"",
+      transationID:"",
       alert: {
         message: "",
       },
@@ -434,22 +442,85 @@ export default {
         
           
     },
-      async commande() {
+     async commande() {
       try {
+        this.filters = "";
         this.addforms.montant = this.filteredMenus[0].prix * this.addforms.quantite;
         this.addforms.restaurant_id =this.restaurantId;
-        const response = await axios.post("/api/commandes", this.addforms);
+            const data = {
+            name: this.addforms.name,
+            description: this.addforms.description,
+            contact: this.addforms.contact,
+            addrese: this.addforms.addrese,
+            montant: this.addforms.montant,
+            status: this.addforms.status,
+            restaurant_id: this.addforms.restaurant_id,
+          };
+        
+        const response = await axios.post("/api/commandes", data);
         if (response.status == 201) {
-          
+          console.log(response);
+           this.commandeID = response.data.data.id;
+          console.log(this.commandeID);
           this.showModalRepas = !this.showModalRepas;
-          this.addforms ={};
-           new Noty({
-            type: 'success',
-            layout: 'topRight',
-            text: 'Votre commande est éffectuée avec succés',
-            timeout: 5000,
-          }).show( );
-        }else {
+          this.lignecommande();    
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+     async lignecommande() {
+      try {
+        this.filters = "";
+        this.addforms.montant = this.filteredMenus[0].prix * this.addforms.quantite;
+        const datas = {
+        quantite: this.addforms.quantite,
+        repas_id: this.addforms.repas_id,
+        commande_id:  this.commandeID,
+        montant: this.addforms.montant,
+      };
+        
+        const response = await axios.post("/api/lignecommandes", datas);
+        if (response.status == 201) {
+          console.log(response);
+          this.createTransaction(); 
+        }
+      } catch (error) {
+        if (error.response.status !== 500) {
+          this.showAlert = true;
+          this.alert.message =
+            "Quelque chose c'est mal passé. Merci d'essayer plus tard!";
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        }
+      }
+    },
+    async payementmethod() {
+      try {
+            const data = {
+            transationId: this.transationID,
+            commande_id: this.commandeID,
+            
+          };
+        
+        const response = await axios.post("/api/payments", data);
+        if (response.status == 201) {
+          console.log(response);
+          new Noty({
+                type: "success",
+                layout: "topRight",
+                text: "Votre commande a été enregistrée avec succès.",
+                timeout: 5000,
+              }).show();
+            } else {
           this.showModalRepas = !this.showModalRepas;
           this.showAlert = true;
           this.alert.message =
@@ -579,7 +650,10 @@ export default {
     },
     successHandler(response) {
       console.log(response);
-      this.commande();
+      this.transationID = response.transactionId;
+      console.log(this.transationID);
+      
+      this.payementmethod();
     },
   },
 };
@@ -587,7 +661,7 @@ export default {
     
 <style scoped>
 .custom-background {
-  background-image: url("~@/assets/la-cuisine.jpg");
+  /*background-image: url("~@/assets/la-cuisine.jpg");*/
   /* Remplacez 'votre-image.jpg' par le nom de votre image */
   background-size: cover;
   /* Ajustez la taille de l'image */

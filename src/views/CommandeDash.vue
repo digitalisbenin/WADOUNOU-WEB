@@ -7,7 +7,7 @@
         <AlertComponent :content="alert.message" type-alert="error" />
       </div>
       <label for="table-search" class="sr-only">Rechercher</label>
-      <div class="relative">
+      <div class="relative hidden md:block">
         <div
           class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
         >
@@ -33,7 +33,7 @@
           placeholder="Rechercher ..."
         />
       </div>
-      <div class="ml-9">
+      <div class="ml-9 flex">
       <button
      
        class="text-gray-700 bg-blue-500 rounded-lg font-medium px-12 py-1"
@@ -42,9 +42,9 @@
         Tous
       </button>
       <button 
-      @click="filter = 'En cour'"
+      @click="filter = 'En attente'"
       class="text-gray-700 bg-yellow-500 rounded-lg font-medium px-12 py-1 ml-4">
-        En cour
+        En attente
       </button>
       <button
       @click="filter = 'Affecter'"
@@ -72,7 +72,7 @@
           <th scope="col" class="px-6 py-3">Decription</th>
           <th scope="col" class="px-6 py-3">Addrese</th>
           <th scope="col" class="px-6 py-3">Contact</th>
-          <th scope="col" class="px-6 py-3">Nom repas</th>
+          <th scope="col" class="px-6 py-3">Montant</th>
           <th scope="col" class="px-6 py-3">Status</th>
           <th scope="col" class="px-6 py-3">Action</th>
         </tr>
@@ -101,13 +101,12 @@
           <td class="px-6 py-4">
             {{ commande.contact }}
           </td>
-
           <td class="px-6 py-4">
-            {{ commande.repas.name }}
+            {{ commande.montant.split(".")[0] }}FCFA 
           </td>
           <td class="px-6 py-4">
             <span
-              v-if="commande.status === 'En cours'"
+              v-if="commande.status === 'En attente'"
               class="text-uppercase inline-flex items-center rounded-full px-2.5 py-1 text-sm bg-yellow-600 text-gray-900"
             >
               <span class="relative mr-1.5 flex h-2.5 w-2.5">
@@ -156,7 +155,7 @@
           </td>
 
           <td 
-          v-if="commande.status === 'En cours'"
+          v-if="commande.status === 'En attente'"
           class="flex items-center px-6 py-4 space-x-3">
             <button
             
@@ -201,6 +200,29 @@
                 Supprimer
               </span>
             </button>
+            <router-link
+            
+              class="text-green-500 hover:bg-gray-100 hover:rounded-lg font-medium"
+              :to="`/commandeDetail/${commande.id}`"
+            >
+              <span class="flex items-center p-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                  />
+                </svg>
+                Détail
+              </span>
+            </router-link>
           </td>
           <td 
           v-else
@@ -225,7 +247,31 @@
                 Supprimer
               </span>
             </button>
+            <router-link
+            
+              class="text-green-500 hover:bg-gray-100 hover:rounded-lg font-medium"
+              :to="`/commandeDetail/${commande.id}`"
+            >
+              <span class="flex items-center p-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                  />
+                </svg>
+                Détail
+              </span>
+            </router-link>
           </td>
+          
         </tr>
       </tbody>
     </table>
@@ -419,6 +465,7 @@ export default {
    
  filteredCommandeStatus() {
   // Filtrer d'abord par restaurant.id
+  
   const commandesByRestaurant = this.filteredCommandes;
 
   // Filtrer ensuite par statut
@@ -430,6 +477,7 @@ export default {
   });
 
   return filtered_data;
+  
 },
 
      filteredRestaurant() {
@@ -459,7 +507,7 @@ export default {
     return filtered_data;
   } else {
     // Retournez tous les menus si filteredRestaurant est vide
-    return this.commandes;
+    return [];
   }
 },
 
